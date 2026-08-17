@@ -815,6 +815,7 @@ pub enum KnownCameraControl {
     Exposure,
     Iris,
     Focus,
+    AutoExposure,
     /// Other camera control. Listed is the ID.
     /// Wasteful, however is needed for a unified API across Windows, Linux, and `MacOSX` due to Microsoft's usage of `GUIDs`.
     ///
@@ -824,7 +825,7 @@ pub enum KnownCameraControl {
 
 /// All camera controls in an array.
 #[must_use]
-pub const fn all_known_camera_controls() -> [KnownCameraControl; 15] {
+pub const fn all_known_camera_controls() -> [KnownCameraControl; 16] {
     [
         KnownCameraControl::Brightness,
         KnownCameraControl::Contrast,
@@ -841,6 +842,7 @@ pub const fn all_known_camera_controls() -> [KnownCameraControl; 15] {
         KnownCameraControl::Exposure,
         KnownCameraControl::Iris,
         KnownCameraControl::Focus,
+        KnownCameraControl::AutoExposure,
     ]
 }
 
@@ -868,6 +870,7 @@ impl KnownCameraControl {
             Self::Exposure => Some(12),
             Self::Iris => Some(13),
             Self::Focus => Some(14),
+            Self::AutoExposure => Some(15),
             Self::Other(_) => None,
         }
     }
@@ -893,12 +896,13 @@ impl KnownCameraControl {
             12 => Some(Self::Exposure),
             13 => Some(Self::Iris),
             14 => Some(Self::Focus),
+            15 => Some(Self::AutoExposure),
             _ => None,
         }
     }
 
     /// Number of standard (non-`Other`) controls.
-    pub const STANDARD_COUNT: usize = 15;
+    pub const STANDARD_COUNT: usize = 16;
 
     /// Look up a [`KnownCameraControl`] from a platform-specific ID using a
     /// table that maps canonical indices to platform IDs.

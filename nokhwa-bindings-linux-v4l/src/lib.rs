@@ -42,10 +42,10 @@ mod internal {
         control::MenuItem,
         v4l_sys::{
             V4L2_CID_BACKLIGHT_COMPENSATION, V4L2_CID_BRIGHTNESS, V4L2_CID_CONTRAST,
-            V4L2_CID_EXPOSURE, V4L2_CID_FOCUS_RELATIVE, V4L2_CID_GAIN, V4L2_CID_GAMMA,
-            V4L2_CID_HUE, V4L2_CID_IRIS_RELATIVE, V4L2_CID_PAN_RELATIVE, V4L2_CID_SATURATION,
-            V4L2_CID_SHARPNESS, V4L2_CID_TILT_RELATIVE, V4L2_CID_WHITE_BALANCE_TEMPERATURE,
-            V4L2_CID_ZOOM_RELATIVE,
+            V4L2_CID_EXPOSURE, V4L2_CID_EXPOSURE_AUTO, V4L2_CID_FOCUS_RELATIVE, V4L2_CID_GAIN,
+            V4L2_CID_GAMMA, V4L2_CID_HUE, V4L2_CID_IRIS_RELATIVE, V4L2_CID_PAN_RELATIVE,
+            V4L2_CID_SATURATION, V4L2_CID_SHARPNESS, V4L2_CID_TILT_RELATIVE,
+            V4L2_CID_WHITE_BALANCE_TEMPERATURE, V4L2_CID_ZOOM_RELATIVE,
         },
     };
     use v4l::{
@@ -75,6 +75,7 @@ mod internal {
         V4L2_CID_EXPOSURE,
         V4L2_CID_IRIS_RELATIVE,
         V4L2_CID_FOCUS_RELATIVE,
+        V4L2_CID_EXPOSURE_AUTO,
     ];
 
     /// Converts a [`KnownCameraControl`] into a V4L2 Control ID.
@@ -1097,10 +1098,10 @@ mod internal {
         use v4l::frameinterval::{FrameIntervalEnum, Stepwise};
         use v4l::v4l_sys::{
             V4L2_CID_BACKLIGHT_COMPENSATION, V4L2_CID_BRIGHTNESS, V4L2_CID_CONTRAST,
-            V4L2_CID_EXPOSURE, V4L2_CID_FOCUS_RELATIVE, V4L2_CID_GAIN, V4L2_CID_GAMMA,
-            V4L2_CID_HUE, V4L2_CID_IRIS_RELATIVE, V4L2_CID_PAN_RELATIVE, V4L2_CID_SATURATION,
-            V4L2_CID_SHARPNESS, V4L2_CID_TILT_RELATIVE, V4L2_CID_WHITE_BALANCE_TEMPERATURE,
-            V4L2_CID_ZOOM_RELATIVE,
+            V4L2_CID_EXPOSURE, V4L2_CID_EXPOSURE_AUTO, V4L2_CID_FOCUS_RELATIVE, V4L2_CID_GAIN,
+            V4L2_CID_GAMMA, V4L2_CID_HUE, V4L2_CID_IRIS_RELATIVE, V4L2_CID_PAN_RELATIVE,
+            V4L2_CID_SATURATION, V4L2_CID_SHARPNESS, V4L2_CID_TILT_RELATIVE,
+            V4L2_CID_WHITE_BALANCE_TEMPERATURE, V4L2_CID_ZOOM_RELATIVE,
         };
         use v4l::FourCC;
         use v4l::Timestamp;
@@ -1173,7 +1174,7 @@ mod internal {
         }
 
         // V4L2_CONTROL_IDS contract: each row maps a canonical
-        // KnownCameraControl index (0..=14) to the matching V4L2_CID_*
+        // KnownCameraControl index (0..=15) to the matching V4L2_CID_*
         // constant. If the order ever drifts, every standard control
         // gets the wrong CID — set_control / camera_control would
         // silently issue VIDIOC_S_CTRL on an unrelated control. Pin
@@ -1202,6 +1203,7 @@ mod internal {
                 (KnownCameraControl::Exposure, V4L2_CID_EXPOSURE),
                 (KnownCameraControl::Iris, V4L2_CID_IRIS_RELATIVE),
                 (KnownCameraControl::Focus, V4L2_CID_FOCUS_RELATIVE),
+                (KnownCameraControl::AutoExposure, V4L2_CID_EXPOSURE_AUTO),
             ];
             for (idx, (ctrl, cid)) in expected.iter().enumerate() {
                 assert_eq!(
