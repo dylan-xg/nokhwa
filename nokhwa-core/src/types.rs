@@ -971,6 +971,63 @@ impl Display for KnownCameraControlFlag {
     }
 }
 
+/// The different types of menu items that can appear in [`ControlValueDescription::Menu`].
+#[derive(Clone, Debug, Hash, Ord, PartialOrd, Eq, PartialEq)]
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
+pub enum MenuItem {
+    Name(String),
+    Value(i64),
+}
+
+impl From<String> for MenuItem {
+    fn from(value: String) -> Self {
+        Self::Name(value)
+    }
+}
+
+impl From<i64> for MenuItem {
+    fn from(value: i64) -> Self {
+        Self::Value(value)
+    }
+}
+
+impl Display for MenuItem {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match self {
+            MenuItem::Name(s) => write!(f, "Name: {}", s),
+            MenuItem::Value(i) => write!(f, "Value: {}", i),
+        }
+    }
+}
+
+/// A single entry into [`ControlValueDescription::Menu`].
+#[derive(Clone, Debug, Hash, Ord, PartialOrd, Eq, PartialEq)]
+#[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
+pub struct MenuEntry {
+    id: u32,
+    item: MenuItem,
+}
+
+impl MenuEntry {
+    pub fn new(id: u32, item: MenuItem) -> Self {
+        Self { id, item }
+    }
+
+    pub fn get_id(&self) -> u32 {
+        self.id
+    }
+
+    pub fn get_item(&self) -> MenuItem {
+        self.item.clone()
+    }
+}
+
+impl Display for MenuEntry {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Id: {}, {}", self.id, self.item)
+    }
+}
+
 /// The values for a [`CameraControl`].
 ///
 /// This provides a wide range of values that can be used to control a camera.
@@ -1033,6 +1090,11 @@ pub enum ControlValueDescription {
         max: (f64, f64, f64),
         default: (f64, f64, f64),
     },
+    Menu {
+        value: u32,
+        items: Vec<MenuEntry>,
+        default: u32,
+    },
 }
 
 impl ControlValueDescription {
@@ -1066,6 +1128,7 @@ impl ControlValueDescription {
             ControlValueDescription::RGB { value, .. } => {
                 ControlValueSetter::RGB(value.0, value.1, value.2)
             },
+            ControlValueDescription::Menu { value, .. } => ControlValueSetter::Menu(*value),
         }
     }
 
@@ -1170,6 +1233,10 @@ impl ControlValueDescription {
                 },
                 None => false,
             },
+            ControlValueDescription::Menu { items, .. } => match setter.as_menu() {
+                Some(u) => items.iter().any(|entry| entry.id == *u),
+                None => false,
+            },
         }
     }
 }
@@ -1264,6 +1331,17 @@ impl Display for ControlValueDescription {
                     f,
                     "Current: ({}, {}, {}), Max: ({}, {}, {}), Default: ({}, {}, {})",
                     value.0, value.1, value.2, max.0, max.1, max.2, default.0, default.1, default.2
+                )
+            },
+            ControlValueDescription::Menu {
+                value,
+                items,
+                default,
+            } => {
+                write!(
+                    f,
+                    "Current: {}, Entries: ({:?}), Default: {}",
+                    value, items, default
                 )
             },
         }
@@ -1374,6 +1452,7 @@ pub enum ControlValueSetter {
     Point(f64, f64),
     EnumValue(i64),
     RGB(f64, f64, f64),
+    Menu(u32),
 }
 
 impl ControlValueSetter {
@@ -1466,6 +1545,15 @@ impl ControlValueSetter {
             None
         }
     }
+
+    #[must_use]
+    pub fn as_menu(&self) -> Option<&u32> {
+        if let ControlValueSetter::Menu(u) = self {
+            Some(u)
+        } else {
+            None
+        }
+    }
 }
 
 impl Display for ControlValueSetter {
@@ -1500,6 +1588,9 @@ impl Display for ControlValueSetter {
             },
             ControlValueSetter::RGB(r, g, b) => {
                 write!(f, "RGBValue: ({r}, {g}, {b})")
+            },
+            ControlValueSetter::Menu(u) => {
+                write!(f, "MenuValue: {u}")
             },
         }
     }
