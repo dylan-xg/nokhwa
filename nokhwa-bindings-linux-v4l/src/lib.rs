@@ -41,11 +41,13 @@ mod internal {
     use v4l::{
         control::MenuItem,
         v4l_sys::{
-            V4L2_CID_BACKLIGHT_COMPENSATION, V4L2_CID_BRIGHTNESS, V4L2_CID_CONTRAST,
-            V4L2_CID_EXPOSURE, V4L2_CID_EXPOSURE_AUTO, V4L2_CID_FOCUS_RELATIVE, V4L2_CID_GAIN,
-            V4L2_CID_GAMMA, V4L2_CID_HUE, V4L2_CID_IRIS_RELATIVE, V4L2_CID_PAN_RELATIVE,
-            V4L2_CID_SATURATION, V4L2_CID_SHARPNESS, V4L2_CID_TILT_RELATIVE,
-            V4L2_CID_WHITE_BALANCE_TEMPERATURE, V4L2_CID_ZOOM_RELATIVE,
+            V4L2_CID_AUTO_WHITE_BALANCE, V4L2_CID_BACKLIGHT_COMPENSATION, V4L2_CID_BRIGHTNESS,
+            V4L2_CID_CONTRAST, V4L2_CID_EXPOSURE, V4L2_CID_EXPOSURE_ABSOLUTE,
+            V4L2_CID_EXPOSURE_AUTO, V4L2_CID_EXPOSURE_AUTO_PRIORITY, V4L2_CID_FOCUS_RELATIVE,
+            V4L2_CID_GAIN, V4L2_CID_GAMMA, V4L2_CID_HUE, V4L2_CID_IRIS_RELATIVE,
+            V4L2_CID_PAN_RELATIVE, V4L2_CID_POWER_LINE_FREQUENCY, V4L2_CID_SATURATION,
+            V4L2_CID_SHARPNESS, V4L2_CID_TILT_RELATIVE, V4L2_CID_WHITE_BALANCE_TEMPERATURE,
+            V4L2_CID_ZOOM_RELATIVE,
         },
     };
     use v4l::{
@@ -76,6 +78,10 @@ mod internal {
         V4L2_CID_IRIS_RELATIVE,
         V4L2_CID_FOCUS_RELATIVE,
         V4L2_CID_EXPOSURE_AUTO,
+        V4L2_CID_EXPOSURE_ABSOLUTE,
+        V4L2_CID_AUTO_WHITE_BALANCE,
+        V4L2_CID_POWER_LINE_FREQUENCY,
+        V4L2_CID_EXPOSURE_AUTO_PRIORITY,
     ];
 
     /// Converts a [`KnownCameraControl`] into a V4L2 Control ID.
@@ -1097,11 +1103,13 @@ mod internal {
         use v4l::fraction::Fraction;
         use v4l::frameinterval::{FrameIntervalEnum, Stepwise};
         use v4l::v4l_sys::{
-            V4L2_CID_BACKLIGHT_COMPENSATION, V4L2_CID_BRIGHTNESS, V4L2_CID_CONTRAST,
-            V4L2_CID_EXPOSURE, V4L2_CID_EXPOSURE_AUTO, V4L2_CID_FOCUS_RELATIVE, V4L2_CID_GAIN,
-            V4L2_CID_GAMMA, V4L2_CID_HUE, V4L2_CID_IRIS_RELATIVE, V4L2_CID_PAN_RELATIVE,
-            V4L2_CID_SATURATION, V4L2_CID_SHARPNESS, V4L2_CID_TILT_RELATIVE,
-            V4L2_CID_WHITE_BALANCE_TEMPERATURE, V4L2_CID_ZOOM_RELATIVE,
+            V4L2_CID_AUTO_WHITE_BALANCE, V4L2_CID_BACKLIGHT_COMPENSATION, V4L2_CID_BRIGHTNESS,
+            V4L2_CID_CONTRAST, V4L2_CID_EXPOSURE, V4L2_CID_EXPOSURE_ABSOLUTE,
+            V4L2_CID_EXPOSURE_AUTO, V4L2_CID_EXPOSURE_AUTO_PRIORITY, V4L2_CID_FOCUS_RELATIVE,
+            V4L2_CID_GAIN, V4L2_CID_GAMMA, V4L2_CID_HUE, V4L2_CID_IRIS_RELATIVE,
+            V4L2_CID_PAN_RELATIVE, V4L2_CID_POWER_LINE_FREQUENCY, V4L2_CID_SATURATION,
+            V4L2_CID_SHARPNESS, V4L2_CID_TILT_RELATIVE, V4L2_CID_WHITE_BALANCE_TEMPERATURE,
+            V4L2_CID_ZOOM_RELATIVE,
         };
         use v4l::FourCC;
         use v4l::Timestamp;
@@ -1204,6 +1212,22 @@ mod internal {
                 (KnownCameraControl::Iris, V4L2_CID_IRIS_RELATIVE),
                 (KnownCameraControl::Focus, V4L2_CID_FOCUS_RELATIVE),
                 (KnownCameraControl::AutoExposure, V4L2_CID_EXPOSURE_AUTO),
+                (
+                    KnownCameraControl::ExposureAbsolute,
+                    V4L2_CID_EXPOSURE_ABSOLUTE,
+                ),
+                (
+                    KnownCameraControl::AutoWhiteBalance,
+                    V4L2_CID_AUTO_WHITE_BALANCE,
+                ),
+                (
+                    KnownCameraControl::PowerLineFrequency,
+                    V4L2_CID_POWER_LINE_FREQUENCY,
+                ),
+                (
+                    KnownCameraControl::ExposureAutoPriority,
+                    V4L2_CID_EXPOSURE_AUTO_PRIORITY,
+                ),
             ];
             for (idx, (ctrl, cid)) in expected.iter().enumerate() {
                 assert_eq!(

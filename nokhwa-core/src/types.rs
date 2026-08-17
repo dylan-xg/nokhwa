@@ -816,6 +816,10 @@ pub enum KnownCameraControl {
     Iris,
     Focus,
     AutoExposure,
+    ExposureAbsolute,
+    AutoWhiteBalance,
+    PowerLineFrequency,
+    ExposureAutoPriority,
     /// Other camera control. Listed is the ID.
     /// Wasteful, however is needed for a unified API across Windows, Linux, and `MacOSX` due to Microsoft's usage of `GUIDs`.
     ///
@@ -825,7 +829,8 @@ pub enum KnownCameraControl {
 
 /// All camera controls in an array.
 #[must_use]
-pub const fn all_known_camera_controls() -> [KnownCameraControl; 16] {
+pub const fn all_known_camera_controls() -> [KnownCameraControl; KnownCameraControl::STANDARD_COUNT]
+{
     [
         KnownCameraControl::Brightness,
         KnownCameraControl::Contrast,
@@ -843,6 +848,10 @@ pub const fn all_known_camera_controls() -> [KnownCameraControl; 16] {
         KnownCameraControl::Iris,
         KnownCameraControl::Focus,
         KnownCameraControl::AutoExposure,
+        KnownCameraControl::ExposureAbsolute,
+        KnownCameraControl::AutoWhiteBalance,
+        KnownCameraControl::PowerLineFrequency,
+        KnownCameraControl::ExposureAutoPriority,
     ]
 }
 
@@ -871,6 +880,10 @@ impl KnownCameraControl {
             Self::Iris => Some(13),
             Self::Focus => Some(14),
             Self::AutoExposure => Some(15),
+            Self::ExposureAbsolute => Some(16),
+            Self::AutoWhiteBalance => Some(17),
+            Self::PowerLineFrequency => Some(18),
+            Self::ExposureAutoPriority => Some(19),
             Self::Other(_) => None,
         }
     }
@@ -897,12 +910,16 @@ impl KnownCameraControl {
             13 => Some(Self::Iris),
             14 => Some(Self::Focus),
             15 => Some(Self::AutoExposure),
+            16 => Some(Self::ExposureAbsolute),
+            17 => Some(Self::AutoWhiteBalance),
+            18 => Some(Self::PowerLineFrequency),
+            19 => Some(Self::ExposureAutoPriority),
             _ => None,
         }
     }
 
     /// Number of standard (non-`Other`) controls.
-    pub const STANDARD_COUNT: usize = 16;
+    pub const STANDARD_COUNT: usize = 20;
 
     /// Look up a [`KnownCameraControl`] from a platform-specific ID using a
     /// table that maps canonical indices to platform IDs.
