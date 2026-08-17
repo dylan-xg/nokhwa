@@ -16,7 +16,7 @@ fn main() {
                     c.misc()
                 );
             }
-        }
+        },
         Err(e) => println!("error: {e}"),
     }
 }

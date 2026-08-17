@@ -1797,7 +1797,7 @@ fn runner_spawn_stream_worker_exits_on_dropped_frames_receiver() {
                 backend.is_none(),
                 "expected no backend tag, got {backend:?}"
             );
-        }
+        },
         other => panic!("expected GeneralError, got {other:?}"),
     }
 }
@@ -1965,7 +1965,7 @@ fn runner_spawn_hybrid_worker_exits_on_dropped_frames_receiver() {
                 backend.is_none(),
                 "expected no backend tag, got {backend:?}"
             );
-        }
+        },
         other => panic!("expected GeneralError, got {other:?}"),
     }
 }
@@ -2093,7 +2093,7 @@ fn runner_spawn_shutter_worker_exits_on_dropped_pictures_receiver() {
                 backend.is_none(),
                 "expected no backend tag, got {backend:?}"
             );
-        }
+        },
         other => panic!("expected GeneralError, got {other:?}"),
     }
 }

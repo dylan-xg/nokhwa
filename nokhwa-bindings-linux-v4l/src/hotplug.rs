@@ -141,7 +141,7 @@ mod real {
             Err(e) => {
                 eprintln!("nokhwa v4l hotplug: inotify init failed: {e}");
                 return;
-            }
+            },
         };
 
         // Seed the cache. Consumers see hotplug deltas, not the
@@ -164,15 +164,15 @@ mod real {
                         // Channel closed (consumer dropped poller).
                         break;
                     }
-                }
+                },
                 PollOutcome::Timeout => {
                     // Loop back, check stop flag.
-                }
+                },
                 PollOutcome::Error => {
                     // poll() error other than EINTR — give up
                     // rather than tight-loop on a permanent fault.
                     break;
-                }
+                },
             }
         }
         // fd dropped here, closes via OwnedFd.
@@ -250,7 +250,7 @@ mod real {
                 } else {
                     PollOutcome::Error
                 }
-            }
+            },
         }
     }
 
@@ -283,7 +283,7 @@ mod real {
                 // again." EINTR is a benign signal interruption —
                 // fall through to the next loop iteration.
                 Some(libc::EAGAIN) => return true,
-                Some(libc::EINTR) => {}
+                Some(libc::EINTR) => {},
                 _ => return false,
             }
         }

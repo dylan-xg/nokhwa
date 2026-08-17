@@ -45,7 +45,7 @@ fn camera_index_from_string() {
                 backend.is_none(),
                 "expected no backend tag, got {backend:?}"
             );
-        }
+        },
         other => panic!("expected GeneralError, got {other:?}"),
     }
 }

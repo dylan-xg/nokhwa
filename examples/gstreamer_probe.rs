@@ -103,7 +103,7 @@ fn main() -> Result<(), nokhwa_core::error::NokhwaError> {
                                 "Brightness did not round-trip: wanted {target}, got {v2}"
                             );
                             println!("Brightness round-trip OK: {value} -> {target} (verified)");
-                        }
+                        },
                         d => panic!("Brightness description variant changed: {d:?}"),
                     }
                     // Restore original to be polite to subsequent runs.

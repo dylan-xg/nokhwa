@@ -381,12 +381,12 @@ pub(crate) fn convert_to_rgb(
                 ));
             }
             Ok(data.to_vec())
-        }
+        },
         FrameFormat::RAWBGR => {
             let mut rgb = vec![0u8; data.len()];
             buf_bgr_to_rgb(resolution, data, &mut rgb)?;
             Ok(rgb)
-        }
+        },
         FrameFormat::GRAY => {
             let expected = resolution.width() as usize * resolution.height() as usize;
             if data.len() != expected {
@@ -404,7 +404,7 @@ pub(crate) fn convert_to_rgb(
                 dst.copy_from_slice(&[pxv, pxv, pxv]);
             }
             Ok(rgb)
-        }
+        },
     }
 }
 
@@ -443,7 +443,7 @@ pub(crate) fn convert_to_rgb_buffer(
             }
             dest.copy_from_slice(data);
             Ok(())
-        }
+        },
         FrameFormat::RAWBGR => buf_bgr_to_rgb(resolution, data, dest),
         FrameFormat::GRAY => {
             let expected = resolution.width() as usize * resolution.height() as usize;
@@ -467,7 +467,7 @@ pub(crate) fn convert_to_rgb_buffer(
                 dest[i + 2] = pxv;
             });
             Ok(())
-        }
+        },
     }
 }
 
@@ -495,7 +495,7 @@ pub(crate) fn convert_to_rgba(
             let mut rgba = vec![0u8; (data.len() / 3) * 4];
             crate::simd::rgb_to_rgba_simd(data, &mut rgba);
             Ok(rgba)
-        }
+        },
         FrameFormat::RAWBGR => {
             let expected = resolution.width() as usize * resolution.height() as usize * 3;
             if data.len() != expected {
@@ -511,7 +511,7 @@ pub(crate) fn convert_to_rgba(
             let mut rgba = vec![0u8; (data.len() / 3) * 4];
             crate::simd::bgr_to_rgba_simd(data, &mut rgba);
             Ok(rgba)
-        }
+        },
         FrameFormat::GRAY => {
             let expected = resolution.width() as usize * resolution.height() as usize;
             if data.len() != expected {
@@ -529,7 +529,7 @@ pub(crate) fn convert_to_rgba(
                 dst.copy_from_slice(&[pxv, pxv, pxv, 255]);
             }
             Ok(rgba)
-        }
+        },
     }
 }
 
@@ -568,7 +568,7 @@ pub(crate) fn convert_to_rgba_buffer(
             }
             crate::simd::rgb_to_rgba_simd(data, dest);
             Ok(())
-        }
+        },
         FrameFormat::RAWBGR => {
             let input_size = resolution.width() as usize * resolution.height() as usize * 3;
             if data.len() != input_size {
@@ -594,7 +594,7 @@ pub(crate) fn convert_to_rgba_buffer(
             }
             crate::simd::bgr_to_rgba_simd(data, dest);
             Ok(())
-        }
+        },
         FrameFormat::GRAY => {
             let expected = resolution.width() as usize * resolution.height() as usize;
             if data.len() != expected {
@@ -618,7 +618,7 @@ pub(crate) fn convert_to_rgba_buffer(
                 dest[i + 3] = 255;
             });
             Ok(())
-        }
+        },
     }
 }
 
@@ -647,18 +647,18 @@ pub(crate) fn convert_to_luma(
                 ));
             }
             Ok(data.to_vec())
-        }
+        },
         // Direct Y-channel extraction for YUYV and NV12
         FrameFormat::YUYV => {
             let mut dest = vec![0u8; resolution.width() as usize * resolution.height() as usize];
             buf_yuyv_extract_luma(data, &mut dest)?;
             Ok(dest)
-        }
+        },
         FrameFormat::NV12 => {
             let mut dest = vec![0u8; resolution.width() as usize * resolution.height() as usize];
             buf_nv12_extract_luma(resolution, data, &mut dest)?;
             Ok(dest)
-        }
+        },
         // For MJPEG, decode to RGB first then average
         FrameFormat::MJPEG => Ok(mjpeg_to_rgb(data, false)?
             .as_chunks::<3>()
@@ -685,7 +685,7 @@ pub(crate) fn convert_to_luma(
             let mut luma = vec![0u8; data.len() / 3];
             crate::simd::rgb_to_luma_simd(data, &mut luma);
             Ok(luma)
-        }
+        },
     }
 }
 
@@ -721,7 +721,7 @@ pub(crate) fn convert_to_luma_buffer(
             }
             dest.copy_from_slice(data);
             Ok(())
-        }
+        },
         FrameFormat::YUYV => buf_yuyv_extract_luma(data, dest),
         FrameFormat::NV12 => buf_nv12_extract_luma(resolution, data, dest),
         // RAWBGR works with the same function: (R+G+B)/3 == (B+G+R)/3 (addition is commutative)
@@ -750,7 +750,7 @@ pub(crate) fn convert_to_luma_buffer(
             }
             crate::simd::rgb_to_luma_simd(data, dest);
             Ok(())
-        }
+        },
         FrameFormat::MJPEG => {
             let luma = convert_to_luma(fcc, resolution, data)?;
             if dest.len() != luma.len() {
@@ -766,7 +766,7 @@ pub(crate) fn convert_to_luma_buffer(
             }
             dest.copy_from_slice(&luma);
             Ok(())
-        }
+        },
     }
 }
 

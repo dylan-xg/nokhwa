@@ -209,7 +209,7 @@ impl FrameSource for AVFoundationCaptureDevice {
         ) {
             (Some(session), Some(_), Some(_), Some(_)) => {
                 !session_is_interrupted(session) && session_is_running(session)
-            }
+            },
             _ => false,
         }
     }
@@ -239,7 +239,7 @@ impl FrameSource for AVFoundationCaptureDevice {
             Ok(recv) => {
                 self.frame_buffer_receiver.try_iter().for_each(drop);
                 Ok(Cow::from(recv.0))
-            }
+            },
             Err(why) => Err(NokhwaError::ReadFrameError {
                 message: why.to_string(),
                 format: Some(self.format.format()),

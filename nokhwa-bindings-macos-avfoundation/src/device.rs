@@ -590,7 +590,7 @@ impl AVCaptureDeviceWrapper {
                         "device not found",
                     )),
                 }
-            }
+            },
             CameraIndex::String(id) => {
                 // A pure-numeric string is a positional index, not an AVF
                 // unique ID — `open(CameraIndex::String("0"))` must reach the
@@ -603,7 +603,7 @@ impl AVCaptureDeviceWrapper {
                     return Self::new(&CameraIndex::Index(index));
                 }
                 Ok(Self::from_id(id, None)?)
-            }
+            },
         }
     }
 
@@ -1182,7 +1182,7 @@ impl AVCaptureDeviceWrapper {
                 device_set_exposure_custom(&self.inner, current_duration, new_iso);
 
                 Ok(())
-            }
+            },
             KnownCameraControl::Gamma => {
                 let duration_ctrl = get_and_check_control(&controls, &id, value)?;
 
@@ -1200,7 +1200,7 @@ impl AVCaptureDeviceWrapper {
                 device_set_exposure_custom(&self.inner, new_duration, current_iso);
 
                 Ok(())
-            }
+            },
             KnownCameraControl::WhiteBalance => {
                 let wb_enum_value = get_and_check_control(&controls, &id, value)?;
 
@@ -1214,7 +1214,7 @@ impl AVCaptureDeviceWrapper {
                 );
 
                 Ok(())
-            }
+            },
             KnownCameraControl::BacklightComp => {
                 let ctrlvalue = get_and_check_control(&controls, &id, value)?;
 
@@ -1225,7 +1225,7 @@ impl AVCaptureDeviceWrapper {
                 device_set_auto_low_light_boost(&self.inner, setter);
 
                 Ok(())
-            }
+            },
             KnownCameraControl::Gain => {
                 let ctrlvalue = get_and_check_control(&controls, &id, value)?;
 
@@ -1243,7 +1243,7 @@ impl AVCaptureDeviceWrapper {
                 device_set_white_balance_gains(&self.inner, gains);
 
                 Ok(())
-            }
+            },
             KnownCameraControl::Zoom => {
                 let ctrlvalue = get_and_check_control(&controls, &id, value)?;
 
@@ -1254,7 +1254,7 @@ impl AVCaptureDeviceWrapper {
                 device_ramp_to_video_zoom_factor(&self.inner, setter, 1.0_f32);
 
                 Ok(())
-            }
+            },
             KnownCameraControl::Exposure => {
                 let ctrlvalue = get_and_check_control(&controls, &id, value)?;
 
@@ -1265,7 +1265,7 @@ impl AVCaptureDeviceWrapper {
                 device_set_exposure_mode(&self.inner, AVCaptureExposureMode(setter as isize));
 
                 Ok(())
-            }
+            },
             KnownCameraControl::Iris => Err(NokhwaError::set_property(
                 id.to_string(),
                 value.to_string(),
@@ -1281,7 +1281,7 @@ impl AVCaptureDeviceWrapper {
                 device_set_focus_mode(&self.inner, AVCaptureFocusMode(setter as isize));
 
                 Ok(())
-            }
+            },
             KnownCameraControl::Other(i) => match i {
                 0 => {
                     // Focus point of interest
@@ -1306,7 +1306,7 @@ impl AVCaptureDeviceWrapper {
                     device_set_focus_poi(&self.inner, setter);
 
                     Ok(())
-                }
+                },
                 1 => {
                     // Focus manual lens position
                     let ctrlvalue = get_and_check_control(&controls, &id, value)?;
@@ -1318,7 +1318,7 @@ impl AVCaptureDeviceWrapper {
                     device_set_focus_mode_locked_with_lens_position(&self.inner, setter);
 
                     Ok(())
-                }
+                },
                 2 => {
                     // Exposure point of interest
                     let ctrlvalue = get_and_check_control(&controls, &id, value)?;
@@ -1342,7 +1342,7 @@ impl AVCaptureDeviceWrapper {
                     device_set_exposure_poi(&self.inner, setter);
 
                     Ok(())
-                }
+                },
                 3 => {
                     // Face-driven auto exposure
                     let ctrlvalue = get_and_check_control(&controls, &id, value)?;
@@ -1354,7 +1354,7 @@ impl AVCaptureDeviceWrapper {
                     device_set_auto_adjusts_face_driven_auto_exposure(&self.inner, setter);
 
                     Ok(())
-                }
+                },
                 4 => {
                     // Exposure target bias
                     let ctrlvalue = get_and_check_control(&controls, &id, value)?;
@@ -1366,7 +1366,7 @@ impl AVCaptureDeviceWrapper {
                     device_set_exposure_target_bias(&self.inner, setter);
 
                     Ok(())
-                }
+                },
                 5 => {
                     // Torch mode
                     let ctrlvalue = get_and_check_control(&controls, &id, value)?;
@@ -1378,7 +1378,7 @@ impl AVCaptureDeviceWrapper {
                     device_set_torch_mode(&self.inner, AVCaptureTorchMode(setter as isize));
 
                     Ok(())
-                }
+                },
                 6 => {
                     // Geometric distortion correction
                     let ctrlvalue = get_and_check_control(&controls, &id, value)?;
@@ -1390,7 +1390,7 @@ impl AVCaptureDeviceWrapper {
                     device_set_geometric_distortion_correction_enabled(&self.inner, setter);
 
                     Ok(())
-                }
+                },
                 _ => Err(NokhwaError::set_property(
                     id.to_string(),
                     value.to_string(),

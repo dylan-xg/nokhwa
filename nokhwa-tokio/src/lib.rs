@@ -227,12 +227,12 @@ impl Drop for TokioCameraRunner {
             match tokio::runtime::Handle::try_current() {
                 Ok(h) => {
                     h.spawn_blocking(move || drop(inner));
-                }
+                },
                 Err(_) => {
                     // No tokio runtime: the calling thread is not an
                     // executor task, so a synchronous join is safe.
                     drop(inner);
-                }
+                },
             }
         }
     }

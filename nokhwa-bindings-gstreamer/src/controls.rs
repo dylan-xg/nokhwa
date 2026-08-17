@@ -161,7 +161,7 @@ pub(crate) fn set_live_property(
                 other.to_string(),
                 "unsupported ControlValueSetter variant for live property",
             ));
-        }
+        },
     };
     source.set_property(property, int_value);
     Ok(())
@@ -227,7 +227,7 @@ mod tests {
     #[test]
     fn control_handle_brightness_is_live_property() {
         match control_handle(KnownCameraControl::Brightness) {
-            Some(GstControlHandle::Property("brightness")) => {}
+            Some(GstControlHandle::Property("brightness")) => {},
             other => panic!("expected Property(\"brightness\"), got {other:?}"),
         }
     }
@@ -235,7 +235,7 @@ mod tests {
     #[test]
     fn control_handle_contrast_is_live_property() {
         match control_handle(KnownCameraControl::Contrast) {
-            Some(GstControlHandle::Property("contrast")) => {}
+            Some(GstControlHandle::Property("contrast")) => {},
             other => panic!("expected Property(\"contrast\"), got {other:?}"),
         }
     }
@@ -243,7 +243,7 @@ mod tests {
     #[test]
     fn control_handle_hue_is_live_property() {
         match control_handle(KnownCameraControl::Hue) {
-            Some(GstControlHandle::Property("hue")) => {}
+            Some(GstControlHandle::Property("hue")) => {},
             other => panic!("expected Property(\"hue\"), got {other:?}"),
         }
     }
@@ -251,7 +251,7 @@ mod tests {
     #[test]
     fn control_handle_saturation_is_live_property() {
         match control_handle(KnownCameraControl::Saturation) {
-            Some(GstControlHandle::Property("saturation")) => {}
+            Some(GstControlHandle::Property("saturation")) => {},
             other => panic!("expected Property(\"saturation\"), got {other:?}"),
         }
     }
@@ -282,7 +282,7 @@ mod tests {
             match control_handle(*kcc) {
                 Some(GstControlHandle::V4l2Cid(name)) => {
                     assert_eq!(name, *expected, "wrong CID name for {kcc:?}");
-                }
+                },
                 other => panic!("expected V4l2Cid for {kcc:?}, got {other:?}"),
             }
         }
@@ -398,7 +398,7 @@ mod tests {
                     error,
                     "i64 value exceeds i32 range expected by v4l2src extra-controls"
                 );
-            }
+            },
             other => panic!("expected SetPropertyError, got {other:?}"),
         }
     }
@@ -474,7 +474,7 @@ mod tests {
                         error, "unsupported ControlValueSetter variant for V4L2 CID",
                         "canonical error string drifted for {setter:?}"
                     );
-                }
+                },
                 other => panic!("expected SetPropertyError for {setter:?}, got {other:?}"),
             }
         }
@@ -527,7 +527,7 @@ mod tests {
                     error,
                     "i64 value exceeds i32 range expected by v4l2src property"
                 );
-            }
+            },
             other => panic!("expected SetPropertyError, got {other:?}"),
         }
 
@@ -544,7 +544,7 @@ mod tests {
             } => {
                 assert_eq!(property, "brightness");
                 assert_eq!(value, too_small_i64.to_string());
-            }
+            },
             other => panic!("expected SetPropertyError, got {other:?}"),
         }
     }
@@ -594,7 +594,7 @@ mod tests {
                         error, "unsupported ControlValueSetter variant for live property",
                         "canonical error string drifted for {setter:?}"
                     );
-                }
+                },
                 other => panic!("expected SetPropertyError for {setter:?}, got {other:?}"),
             }
         }

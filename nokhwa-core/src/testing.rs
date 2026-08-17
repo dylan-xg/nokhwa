@@ -861,7 +861,7 @@ mod tests {
         match err {
             NokhwaError::UnsupportedOperationError(b) => {
                 assert_eq!(b, ApiBackend::Browser);
-            }
+            },
             other => panic!("expected UnsupportedOperationError(Browser), got {other:?}"),
         }
     }

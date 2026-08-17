@@ -157,7 +157,7 @@ impl PipelineHandle {
                     message: format!("set_state(Playing): {e}"),
                     backend: Some(nokhwa_core::types::ApiBackend::GStreamer),
                 });
-            }
+            },
         };
         if state_change == gstreamer::StateChangeSuccess::Async {
             let (res, _, _) = pipeline.state(gstreamer::ClockTime::from_seconds(5));
@@ -429,7 +429,7 @@ mod tests {
             NokhwaError::OpenDeviceError { device, error } => {
                 assert_eq!(device, "GStreamer device");
                 assert_eq!(error, "no compatible formats");
-            }
+            },
             other => panic!("expected OpenDeviceError, got {other:?}"),
         }
     }
@@ -473,7 +473,7 @@ mod tests {
                 let expected =
                     format!("no format in the device's caps satisfied the request: {candidates:?}");
                 assert_eq!(error, expected);
-            }
+            },
             other => panic!("expected OpenDeviceError, got {other:?}"),
         }
     }
@@ -569,7 +569,7 @@ mod tests {
             NokhwaError::OpenStreamError { message, backend } => {
                 assert_eq!(message, "capsfilter: no plugin");
                 assert_eq!(backend, Some(ApiBackend::GStreamer));
-            }
+            },
             other => panic!("expected OpenStreamError, got {other:?}"),
         }
 
@@ -581,7 +581,7 @@ mod tests {
             NokhwaError::OpenStreamError { message, backend } => {
                 assert_eq!(message, "link convert->appsink: negotiation failed");
                 assert_eq!(backend, Some(ApiBackend::GStreamer));
-            }
+            },
             other => panic!("expected OpenStreamError, got {other:?}"),
         }
     }

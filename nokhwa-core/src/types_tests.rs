@@ -1838,7 +1838,7 @@ fn frame_format_parse_invalid_returns_error() {
             NokhwaError::StructureError { structure, error } => {
                 assert_eq!(structure, "FrameFormat");
                 assert_eq!(error, format!("No match for {token}"));
-            }
+            },
             other => panic!("expected StructureError for {token:?}, got {other:?}"),
         }
     }
@@ -1872,7 +1872,7 @@ fn camera_index_as_index_returns_err_for_string() {
                 backend.is_none(),
                 "expected no backend tag, got {backend:?}"
             );
-        }
+        },
         other => panic!("expected GeneralError, got {other:?}"),
     }
 }
@@ -1952,7 +1952,7 @@ fn camera_index_try_from_u32_non_numeric_string_errs() {
                 backend.is_none(),
                 "expected no backend tag, got {backend:?}"
             );
-        }
+        },
         other => panic!("expected GeneralError, got {other:?}"),
     }
 }
@@ -1982,7 +1982,7 @@ fn camera_index_try_from_usize_non_numeric_string_errs() {
                 backend.is_none(),
                 "expected no backend tag, got {backend:?}"
             );
-        }
+        },
         other => panic!("expected GeneralError, got {other:?}"),
     }
 }
@@ -2142,7 +2142,7 @@ fn frame_format_from_str_unknown_returns_structure_error() {
         NokhwaError::StructureError { structure, error } => {
             assert_eq!(structure, "FrameFormat");
             assert_eq!(error, "No match for H264");
-        }
+        },
         other => panic!("expected StructureError, got {other:?}"),
     }
 }
@@ -2162,7 +2162,7 @@ fn frame_format_from_str_is_case_sensitive() {
             NokhwaError::StructureError { structure, error } => {
                 assert_eq!(structure, "FrameFormat");
                 assert_eq!(error, format!("No match for {token}"));
-            }
+            },
             other => panic!("expected StructureError for {token:?}, got {other:?}"),
         }
     }
@@ -2184,7 +2184,7 @@ fn frame_format_from_str_distinguished_from_fourcc() {
         NokhwaError::StructureError { structure, error } => {
             assert_eq!(structure, "FrameFormat");
             assert_eq!(error, "No match for MJPG");
-        }
+        },
         other => panic!("expected StructureError, got {other:?}"),
     }
     assert_eq!(FrameFormat::from_fourcc("MJPEG"), None);

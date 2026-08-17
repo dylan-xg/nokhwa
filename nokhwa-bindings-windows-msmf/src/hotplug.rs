@@ -178,7 +178,7 @@ mod real {
                 }
                 eprintln!("nokhwa msmf hotplug: create_hidden_window failed: {e}");
                 return;
-            }
+            },
         };
 
         let notify_handle = match register_device_notifications(hwnd) {
@@ -190,7 +190,7 @@ mod real {
                 }
                 eprintln!("nokhwa msmf hotplug: RegisterDeviceNotificationW failed: {e}");
                 return;
-            }
+            },
         };
 
         // Pump messages until WM_QUIT arrives from Drop. WM_DEVICECHANGE

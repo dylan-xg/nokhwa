@@ -56,7 +56,7 @@ pub fn query(api: ApiBackend) -> Result<Vec<CameraInfo>, NokhwaError> {
                         log::warn!("No suitable backends available on Linux. Perhaps you meant to enable one of the backends such as `input-v4l`? (Please read the docs.)");
                         Err(NokhwaError::UnsupportedOperationError(ApiBackend::Auto))
                     }
-                }
+                },
                 "windows" => {
                     if cfg!(feature = "input-msmf") && cfg!(target_os = "windows") {
                         query(ApiBackend::MediaFoundation)
@@ -67,7 +67,7 @@ pub fn query(api: ApiBackend) -> Result<Vec<CameraInfo>, NokhwaError> {
                         log::warn!("No suitable backends available on Windows. Perhaps you meant to enable one of the backends such as `input-msmf`? (Please read the docs.)");
                         Err(NokhwaError::UnsupportedOperationError(ApiBackend::Auto))
                     }
-                }
+                },
                 "macos" => {
                     if cfg!(feature = "input-avfoundation") {
                         query(ApiBackend::AVFoundation)
@@ -78,7 +78,7 @@ pub fn query(api: ApiBackend) -> Result<Vec<CameraInfo>, NokhwaError> {
                         log::warn!("No suitable backends available on macOS. Perhaps you meant to enable one of the backends such as `input-avfoundation`? (Please read the docs.)");
                         Err(NokhwaError::UnsupportedOperationError(ApiBackend::Auto))
                     }
-                }
+                },
                 "ios" => {
                     if cfg!(feature = "input-avfoundation") {
                         query(ApiBackend::AVFoundation)
@@ -87,16 +87,16 @@ pub fn query(api: ApiBackend) -> Result<Vec<CameraInfo>, NokhwaError> {
                         log::warn!("No suitable backends available on iOS. Perhaps you meant to enable one of the backends such as `input-avfoundation`? (Please read the docs.)");
                         Err(NokhwaError::UnsupportedOperationError(ApiBackend::Auto))
                     }
-                }
+                },
                 _ => {
                     #[cfg(feature = "logging")]
                     log::warn!(
                         "No suitable backends available. You are on an unsupported platform."
                     );
                     Err(NokhwaError::NotImplementedError("Bad Platform".to_string()))
-                }
+                },
             }
-        }
+        },
         ApiBackend::AVFoundation => query_avfoundation(),
         ApiBackend::Video4Linux => query_v4l(),
         ApiBackend::MediaFoundation => query_msmf(),
@@ -190,7 +190,7 @@ mod tests {
         match result {
             Err(NokhwaError::UnsupportedOperationError(returned)) => {
                 assert_eq!(returned, api);
-            }
+            },
             other => panic!("expected UnsupportedOperationError(Custom), got {other:?}"),
         }
     }
@@ -198,7 +198,7 @@ mod tests {
     #[test]
     fn query_browser_is_unsupported() {
         match query(ApiBackend::Browser) {
-            Err(NokhwaError::UnsupportedOperationError(ApiBackend::Browser)) => {}
+            Err(NokhwaError::UnsupportedOperationError(ApiBackend::Browser)) => {},
             other => panic!("expected UnsupportedOperationError(Browser), got {other:?}"),
         }
     }
@@ -213,7 +213,7 @@ mod tests {
     #[test]
     fn query_v4l_is_unsupported_when_disabled() {
         match query(ApiBackend::Video4Linux) {
-            Err(NokhwaError::UnsupportedOperationError(ApiBackend::Video4Linux)) => {}
+            Err(NokhwaError::UnsupportedOperationError(ApiBackend::Video4Linux)) => {},
             other => panic!("expected UnsupportedOperationError(Video4Linux), got {other:?}"),
         }
     }
@@ -222,7 +222,7 @@ mod tests {
     #[test]
     fn query_msmf_is_unsupported_when_disabled() {
         match query(ApiBackend::MediaFoundation) {
-            Err(NokhwaError::UnsupportedOperationError(ApiBackend::MediaFoundation)) => {}
+            Err(NokhwaError::UnsupportedOperationError(ApiBackend::MediaFoundation)) => {},
             other => panic!("expected UnsupportedOperationError(MediaFoundation), got {other:?}"),
         }
     }
@@ -234,7 +234,7 @@ mod tests {
     #[test]
     fn query_avfoundation_is_unsupported_when_disabled() {
         match query(ApiBackend::AVFoundation) {
-            Err(NokhwaError::UnsupportedOperationError(ApiBackend::AVFoundation)) => {}
+            Err(NokhwaError::UnsupportedOperationError(ApiBackend::AVFoundation)) => {},
             other => panic!("expected UnsupportedOperationError(AVFoundation), got {other:?}"),
         }
     }
@@ -243,7 +243,7 @@ mod tests {
     #[test]
     fn query_gstreamer_is_unsupported_when_disabled() {
         match query(ApiBackend::GStreamer) {
-            Err(NokhwaError::UnsupportedOperationError(ApiBackend::GStreamer)) => {}
+            Err(NokhwaError::UnsupportedOperationError(ApiBackend::GStreamer)) => {},
             other => panic!("expected UnsupportedOperationError(GStreamer), got {other:?}"),
         }
     }

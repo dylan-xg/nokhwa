@@ -153,11 +153,11 @@ fn make_channel<T: Send + 'static>(
         Overflow::DropNewest => {
             let (tx, rx) = sync_channel::<T>(capacity);
             (Tx::BoundedDropNewest(tx), rx, None)
-        }
+        },
         Overflow::Block => {
             let (tx, rx) = sync_channel::<T>(capacity);
             (Tx::BoundedBlock(tx), rx, None)
-        }
+        },
         Overflow::DropOldest => {
             // Two chained `sync_channel(capacity)` joined by a relay thread
             // that owns an in-memory `VecDeque<T>` of at most `capacity`
@@ -179,11 +179,11 @@ fn make_channel<T: Send + 'static>(
                     // Try to drain buffer into user_tx first (non-blocking).
                     while let Some(front) = buf.pop_front() {
                         match user_tx.try_send(front) {
-                            Ok(()) => {}
+                            Ok(()) => {},
                             Err(TrySendError::Full(item)) => {
                                 buf.push_front(item);
                                 break;
-                            }
+                            },
                             Err(TrySendError::Disconnected(_)) => return,
                         }
                     }
@@ -201,8 +201,8 @@ fn make_channel<T: Send + 'static>(
                                 buf.pop_front();
                             }
                             buf.push_back(item);
-                        }
-                        Err(RecvTimeoutError::Timeout) => {}
+                        },
+                        Err(RecvTimeoutError::Timeout) => {},
                         Err(RecvTimeoutError::Disconnected) => {
                             // Producer gone; best-effort flush of buffered items
                             // to the consumer. Uses `try_send` (non-blocking) so
@@ -220,19 +220,19 @@ fn make_channel<T: Send + 'static>(
                             // future refactor. `try_send` removes that dependency.
                             while let Some(front) = buf.pop_front() {
                                 match user_tx.try_send(front) {
-                                    Ok(()) => {}
+                                    Ok(()) => {},
                                     Err(TrySendError::Full(_) | TrySendError::Disconnected(_)) => {
                                         return;
-                                    }
+                                    },
                                 }
                             }
                             return;
-                        }
+                        },
                     }
                 }
             });
             (Tx::BoundedDropOldest(prod_tx), user_rx, Some(handle))
-        }
+        },
     }
 }
 
@@ -313,8 +313,8 @@ impl CameraRunner {
                     Ok(Command::Die) | Err(TryRecvError::Disconnected) => break,
                     Ok(Command::SetControl(id, v)) => {
                         let _ = cam.set_control(id, v);
-                    }
-                    Ok(Command::Trigger) | Err(TryRecvError::Empty) => {}
+                    },
+                    Ok(Command::Trigger) | Err(TryRecvError::Empty) => {},
                 }
                 match cam.frame() {
                     Ok(buf) => {
@@ -325,7 +325,7 @@ impl CameraRunner {
                         }
                         // Successful frame: reset the backoff.
                         err_count = 0;
-                    }
+                    },
                     Err(err) => {
                         // Exponential backoff: sleep poll_interval * 2^min(n, 7)
                         // (caps at ×128, i.e. ~1.3 s with the 10 ms default).
@@ -347,7 +347,7 @@ impl CameraRunner {
                         }
                         #[cfg(not(feature = "logging"))]
                         let _ = err;
-                    }
+                    },
                 }
             }
         });
@@ -382,11 +382,11 @@ impl CameraRunner {
                             }
                         }
                     }
-                }
+                },
                 Ok(Command::SetControl(id, v)) => {
                     let _ = cam.set_control(id, v);
-                }
-                Err(RecvTimeoutError::Timeout) => {}
+                },
+                Err(RecvTimeoutError::Timeout) => {},
             }
         });
         let mut relays = Vec::new();
@@ -418,7 +418,7 @@ impl CameraRunner {
                 #[cfg(not(feature = "logging"))]
                 let _ = e;
                 None
-            }
+            },
             None => None,
         };
 
@@ -455,7 +455,7 @@ impl CameraRunner {
                 // make `ev_tx.send` fail.
                 match ev_cmd_rx.try_recv() {
                     Ok(()) | Err(TryRecvError::Disconnected) => break,
-                    Err(TryRecvError::Empty) => {}
+                    Err(TryRecvError::Empty) => {},
                 }
                 if let Some(event) = poll.next_timeout(event_tick) {
                     if ev_tx.send(event).is_err() {
@@ -492,11 +492,11 @@ impl CameraRunner {
                                 let _ = pic_tx.send(pic);
                             }
                         }
-                    }
+                    },
                     Ok(Command::SetControl(id, v)) => {
                         let _ = cam.set_control(id, v);
-                    }
-                    Err(TryRecvError::Empty) => {}
+                    },
+                    Err(TryRecvError::Empty) => {},
                 }
                 match cam.frame() {
                     Ok(buf) => {
@@ -506,7 +506,7 @@ impl CameraRunner {
                         }
                         // Successful frame: reset the backoff.
                         err_count = 0;
-                    }
+                    },
                     Err(err) => {
                         // Same exponential backoff as the stream worker.
                         let shift = err_count.min(7);
@@ -524,7 +524,7 @@ impl CameraRunner {
                         }
                         #[cfg(not(feature = "logging"))]
                         let _ = err;
-                    }
+                    },
                 }
             }
             // Tell the events thread to stop too.
@@ -716,7 +716,7 @@ mod tests {
                     if received.len() >= 2 {
                         break;
                     }
-                }
+                },
             }
         }
         producer.join().unwrap();

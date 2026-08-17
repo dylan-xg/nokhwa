@@ -161,7 +161,7 @@ impl UriPipelineHandle {
                     message: format!("set_state(Playing): {e}"),
                     backend: Some(nokhwa_core::types::ApiBackend::GStreamer),
                 });
-            }
+            },
         };
         if state_change == gstreamer::StateChangeSuccess::Async {
             let (res, _, _) = pipeline.state(gstreamer::ClockTime::from_seconds(10));
@@ -194,7 +194,7 @@ impl UriPipelineHandle {
             Err(e) => {
                 let _ = pipeline.set_state(State::Null);
                 return Err(e);
-            }
+            },
         };
 
         Ok(Self {
@@ -455,7 +455,7 @@ mod tests {
             nokhwa_core::error::NokhwaError::StructureError { structure, error } => {
                 assert_eq!(structure, "sample caps");
                 assert_eq!(error, "first sample had no caps");
-            }
+            },
             other => panic!("expected StructureError, got {other:?}"),
         }
     }
@@ -475,7 +475,7 @@ mod tests {
             nokhwa_core::error::NokhwaError::StructureError { structure, error } => {
                 assert_eq!(structure, "sample caps structure");
                 assert_eq!(error, "caps has no structure");
-            }
+            },
             other => panic!("expected StructureError, got {other:?}"),
         }
     }
@@ -498,7 +498,7 @@ mod tests {
         match err {
             nokhwa_core::error::NokhwaError::StructureError { structure, .. } => {
                 assert_eq!(structure, "format");
-            }
+            },
             other => panic!("expected StructureError, got {other:?}"),
         }
     }
@@ -525,7 +525,7 @@ mod tests {
             nokhwa_core::error::NokhwaError::StructureError { structure, error } => {
                 assert_eq!(structure, "format");
                 assert_eq!(error, "videoconvert produced unsupported format: GRAY16_BE");
-            }
+            },
             other => panic!("expected StructureError, got {other:?}"),
         }
     }
@@ -549,7 +549,7 @@ mod tests {
             nokhwa_core::error::NokhwaError::StructureError { structure, error } => {
                 assert_eq!(structure, "resolution");
                 assert_eq!(error, "invalid dimensions 0x480");
-            }
+            },
             other => panic!("expected StructureError, got {other:?}"),
         }
     }

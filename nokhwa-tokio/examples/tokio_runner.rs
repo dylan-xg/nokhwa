@@ -36,11 +36,11 @@ fn main() -> Result<(), NokhwaError> {
                     Ok(None) => {
                         eprintln!("runner stopped unexpectedly");
                         break;
-                    }
+                    },
                     Err(_) => {
                         eprintln!("frame timeout");
                         break;
-                    }
+                    },
                 }
             }
         }

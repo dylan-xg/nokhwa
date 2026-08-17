@@ -308,7 +308,7 @@ mod internal {
                         ));
                     };
                     set_live_property(pipeline.source(), name, &value)
-                }
+                },
                 GstControlHandle::V4l2Cid(cid) => {
                     // Stage it in `pending_extra_controls` — it takes
                     // effect on the next `open()` via v4l2src's
@@ -337,7 +337,7 @@ mod internal {
                         self.pipeline = Some(ActivePipeline::Local(new_pipeline));
                     }
                     Ok(())
-                }
+                },
             }
         }
     }
@@ -403,7 +403,7 @@ mod internal {
                     // delivers. Before that, an empty list is the most
                     // honest answer.
                     Ok(u.negotiated.map(|f| vec![f]).unwrap_or_default())
-                }
+                },
             }
         }
 
@@ -428,12 +428,12 @@ mod internal {
                         local.negotiated,
                         build_extra_controls(&local.pending_extra_controls)?,
                     )?));
-                }
+                },
                 BackendSource::Uri(uri) => {
                     let handle = UriPipelineHandle::start(&uri.uri)?;
                     uri.negotiated = Some(handle.format());
                     self.pipeline = Some(ActivePipeline::Uri(handle));
-                }
+                },
             }
             Ok(())
         }
@@ -768,7 +768,7 @@ mod backend_tests {
                 for cam in &cameras {
                     eprintln!("  {} | {}", cam.human_name(), cam.description());
                 }
-            }
+            },
             Err(e) => eprintln!("gstreamer::query() errored (accepted): {e}"),
         }
     }

@@ -122,7 +122,7 @@ pub fn output_set_frame_format(
                 "set frame format",
                 "Unsupported frame format BGR",
             ));
-        }
+        },
     };
 
     // Build NSDictionary via msg_send! since the typed NSDictionary API

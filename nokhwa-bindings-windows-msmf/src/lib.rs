@@ -222,7 +222,7 @@ pub mod wmf {
                 Ok(fcc) => fcc,
                 Err(why) => {
                     return Err(NokhwaError::get_property("MF_MT_SUBTYPE", why.to_string()))
-                }
+                },
             };
 
             let Some(frame_format) = guid_to_frameformat(fourcc) else {
@@ -236,7 +236,7 @@ pub mod wmf {
                         "MF_MT_FRAME_SIZE",
                         why.to_string(),
                     ))
-                }
+                },
             };
 
             let frame_rates = {
@@ -359,14 +359,14 @@ pub mod wmf {
                     ));
                 }
                 attr
-            }
+            },
             None => {
                 return Err(NokhwaError::set_property(
                     "GUID MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE",
                     "MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE_VIDCAP_GUID",
                     "Call to IMFAttributes::SetGUID failed - IMFAttributes is None",
                 ));
-            }
+            },
         };
 
         let mut count: u32 = 0;
@@ -534,10 +534,10 @@ pub mod wmf {
             KnownCameraControl::Gamma => MFControlId::ProcAmpRange(VideoProcAmp_Gamma.0),
             KnownCameraControl::WhiteBalance => {
                 MFControlId::ProcAmpRange(VideoProcAmp_WhiteBalance.0)
-            }
+            },
             KnownCameraControl::BacklightComp => {
                 MFControlId::ProcAmpBoolean(VideoProcAmp_BacklightCompensation.0)
-            }
+            },
             KnownCameraControl::Gain => MFControlId::ProcAmpRange(VideoProcAmp_Gain.0),
             KnownCameraControl::Pan => MFControlId::CCRange(CameraControl_Pan.0),
             KnownCameraControl::Tilt => MFControlId::CCRange(CameraControl_Tilt.0),
@@ -551,7 +551,7 @@ pub mod wmf {
                 } else {
                     return None;
                 }
-            }
+            },
         };
 
         Some(control_id)
@@ -690,21 +690,21 @@ pub mod wmf {
                                 match unsafe { activate.ActivateObject::<IMFMediaSource>() } {
                                     Ok(media_source) => {
                                         (media_source, activate_to_descriptors(index, &activate)?)
-                                    }
+                                    },
                                     Err(why) => {
                                         return Err(NokhwaError::open_device(
                                             index.to_string(),
                                             why.to_string(),
                                         ))
-                                    }
+                                    },
                                 }
-                            }
+                            },
                             None => {
                                 return Err(NokhwaError::open_device(
                                     index.to_string(),
                                     "device not found",
                                 ))
-                            }
+                            },
                         };
 
                     let source_reader_attr = {
@@ -744,7 +744,7 @@ pub mod wmf {
                                 "MFCreateSourceReaderFromMediaSource",
                                 why.to_string(),
                             ))
-                        }
+                        },
                     };
 
                     // increment refcnt (fetch_add is an atomic RMW; no load+store race)
@@ -757,7 +757,7 @@ pub mod wmf {
                         source_reader: ManuallyDrop::new(source_reader),
                         stream_epoch: None,
                     })
-                }
+                },
                 CameraIndex::String(s) => {
                     // A pure-numeric string is a positional index, not a
                     // symbolic link — `open(CameraIndex::String("0"))`
@@ -784,7 +784,7 @@ pub mod wmf {
                         Some(index) => Self::new(CameraIndex::Index(index)),
                         None => Err(NokhwaError::open_device(s, "device not found")),
                     }
-                }
+                },
             }
         }
 
@@ -881,7 +881,7 @@ pub mod wmf {
                         default: r.default != 0,
                     };
                     (desc, r.flag)
-                }
+                },
                 MFControlId::ProcAmpRange(id) => {
                     let r = unsafe { query_proc_amp(&video_proc_amp, id, control_id, control)? };
                     let desc = ControlValueDescription::IntegerRange {
@@ -892,7 +892,7 @@ pub mod wmf {
                         default: i64::from(r.default),
                     };
                     (desc, r.flag)
-                }
+                },
                 MFControlId::CCRange(id) => {
                     let r =
                         unsafe { query_camera_control(&camera_control, id, control_id, control)? };
@@ -904,7 +904,7 @@ pub mod wmf {
                         default: i64::from(r.default),
                     };
                     (desc, r.flag)
-                }
+                },
             };
 
             let is_manual = if flag == CameraControl_Flags_Manual.0 {
@@ -939,7 +939,7 @@ pub mod wmf {
                         format!("ControlValueSetter {v}"),
                         "invalid value type",
                     ))
-                }
+                },
             };
 
             // Writing an explicit value always means manual mode.  Using the
@@ -986,13 +986,13 @@ pub mod wmf {
                                 width_x: width,
                                 height_y: height,
                             }
-                        }
+                        },
                         Err(why) => {
                             return Err(NokhwaError::get_property(
                                 "MF_MT_FRAME_SIZE",
                                 why.to_string(),
                             ))
-                        }
+                        },
                     };
 
                     let frame_rate = match unsafe { media_type.GetUINT64(&MF_MT_FRAME_RATE) } {
@@ -1002,7 +1002,7 @@ pub mod wmf {
                                 "MF_MT_FRAME_RATE",
                                 why.to_string(),
                             ))
-                        }
+                        },
                     };
 
                     let format = match unsafe { media_type.GetGUID(&MF_MT_SUBTYPE) } {
@@ -1010,18 +1010,18 @@ pub mod wmf {
                             Some(ff) => ff,
                             None => {
                                 return Err(NokhwaError::get_property("MF_MT_SUBTYPE", "Unknown"))
-                            }
+                            },
                         },
                         Err(why) => {
                             return Err(NokhwaError::get_property("MF_MT_SUBTYPE", why.to_string()))
-                        }
+                        },
                     };
 
                     let cfmt = CameraFormat::new(resolution, format, frame_rate);
                     self.device_format = cfmt;
 
                     Ok(cfmt)
-                }
+                },
                 Err(why) => Err(NokhwaError::get_property(
                     "MF_SOURCE_READER_FIRST_VIDEO_STREAM",
                     why.to_string(),
@@ -1067,14 +1067,14 @@ pub mod wmf {
                                 // (unconfirmed) value here.
                                 self.format_refreshed()?;
                                 return Ok(());
-                            }
+                            },
                             Err(why) => {
                                 last_error = Some(NokhwaError::set_property(
                                     "MF_SOURCE_READER_FIRST_VIDEO_STREAM",
                                     format!("{:?}", parsed.media_type),
                                     why.to_string(),
                                 ));
-                            }
+                            },
                         }
                     }
                 }
@@ -1195,7 +1195,7 @@ pub mod wmf {
                         message: why.to_string(),
                         format: frame_fmt,
                     })
-                }
+                },
             };
 
             let mut buffer_valid_length = 0;

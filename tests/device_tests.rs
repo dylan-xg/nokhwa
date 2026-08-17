@@ -55,7 +55,7 @@ fn msmf_hotplug_take_and_steady_state() {
     match err {
         NokhwaError::UnsupportedOperationError(backend) => {
             assert_eq!(backend, ApiBackend::MediaFoundation);
-        }
+        },
         other => panic!("expected UnsupportedOperationError(MediaFoundation), got {other:?}"),
     }
 
@@ -99,7 +99,7 @@ fn v4l_hotplug_take_and_steady_state() {
     match err {
         NokhwaError::UnsupportedOperationError(backend) => {
             assert_eq!(backend, ApiBackend::Video4Linux);
-        }
+        },
         other => panic!("expected UnsupportedOperationError(Video4Linux), got {other:?}"),
     }
 
@@ -144,7 +144,7 @@ fn avfoundation_hotplug_take_and_steady_state() {
     match err {
         NokhwaError::UnsupportedOperationError(backend) => {
             assert_eq!(backend, ApiBackend::AVFoundation);
-        }
+        },
         other => panic!("expected UnsupportedOperationError(AVFoundation), got {other:?}"),
     }
 
@@ -228,7 +228,7 @@ fn open_stream_and_capture_frames() {
                 assert_eq!(buf.resolution(), res);
             }
             cam.close().expect("StreamCamera::close");
-        }
+        },
         OpenedCamera::Hybrid(mut cam) => {
             cam.open().expect("HybridCamera::open");
             let res = cam.negotiated_format().resolution();
@@ -238,10 +238,10 @@ fn open_stream_and_capture_frames() {
                 assert_eq!(buf.resolution(), res);
             }
             cam.close().expect("HybridCamera::close");
-        }
+        },
         OpenedCamera::Shutter(_) => {
             panic!("expected a stream-capable camera, got Shutter-only")
-        }
+        },
     }
 }
 
@@ -254,13 +254,13 @@ fn enumerate_controls_and_formats() {
             cam.controls().expect("StreamCamera::controls");
             cam.compatible_formats()
                 .expect("StreamCamera::compatible_formats");
-        }
+        },
         OpenedCamera::Hybrid(cam) => {
             cam.controls().expect("HybridCamera::controls");
-        }
+        },
         OpenedCamera::Shutter(cam) => {
             cam.controls().expect("ShutterCamera::controls");
-        }
+        },
     }
 }
 
@@ -429,7 +429,7 @@ fn set_format_invalid_does_not_round_trip() {
     };
     let bogus = CameraFormat::new(Resolution::new(1, 1), FrameFormat::MJPEG, 1);
     match cam.set_format(bogus) {
-        Err(_) => {} // expected on most backends
+        Err(_) => {}, // expected on most backends
         Ok(()) => {
             let got = cam.negotiated_format();
             assert_ne!(
@@ -437,7 +437,7 @@ fn set_format_invalid_does_not_round_trip() {
                 "set_format accepted a 1x1@1 MJPEG format and round-tripped it; \
                  driver should have either errored or snapped to a real format"
             );
-        }
+        },
     }
 }
 

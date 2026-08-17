@@ -164,7 +164,7 @@ mod internal {
                     index.to_string(),
                     format!("V4L2 Error: {why}"),
                 ))
-            }
+            },
         };
 
         let device = std::sync::Arc::new(std::sync::Mutex::new(device));
@@ -208,7 +208,7 @@ mod internal {
                 } else {
                     vec![]
                 }
-            }
+            },
             FrameIntervalEnum::Stepwise(step) => {
                 if step.max.denominator == 1 && step.min.denominator == 1 {
                     return vec![];
@@ -220,7 +220,7 @@ mod internal {
                     .step_by(step.step.numerator as usize)
                     .map(|fps| CameraFormat::new(resolution, fmt, fps))
                     .collect()
-            }
+            },
         }
     }
 
@@ -234,7 +234,7 @@ mod internal {
                     Ok(params) => interval_to_fps(params.interval)?,
                     Err(why) => {
                         return Err(NokhwaError::get_property("V4L2 FrameRate", why.to_string()))
-                    }
+                    },
                 };
 
                 Ok(CameraFormat::new(
@@ -242,7 +242,7 @@ mod internal {
                     frame_format,
                     fps,
                 ))
-            }
+            },
             Err(why) => Err(NokhwaError::get_property("parameters", why.to_string())),
         }
     }
@@ -315,7 +315,7 @@ mod internal {
                     }
                     frame_format_vec.dedup();
                     Ok(frame_format_vec)
-                }
+                },
                 Err(why) => Err(NokhwaError::get_property("FrameFormat", why.to_string())),
             }?;
 
@@ -341,7 +341,7 @@ mod internal {
                                 &mut v,
                             );
                             v
-                        }
+                        },
                     })
                     .flat_map(|res| {
                         device
@@ -440,7 +440,7 @@ mod internal {
                         match frame_size.size {
                             FrameSizeEnum::Discrete(dis) => {
                                 resolutions.push(Resolution::new(dis.width, dis.height));
-                            }
+                            },
                             FrameSizeEnum::Stepwise(step) => {
                                 // V4L Stepwise advertises a (min, max,
                                 // step) triple — every (min + k*step,
@@ -470,11 +470,11 @@ mod internal {
                                     step.step_height,
                                     &mut resolutions,
                                 );
-                            }
+                            },
                         }
                     }
                     Ok(resolutions)
-                }
+                },
                 Err(why) => Err(NokhwaError::get_property("Resolutions", why.to_string())),
             }
         }
@@ -533,7 +533,7 @@ mod internal {
                                 value: current,
                                 default: desc.default != 0,
                             }
-                        }
+                        },
 
                         (Type::String, Value::String(current)) => ControlValueDescription::String {
                             value: current,
@@ -547,7 +547,7 @@ mod internal {
                                      unsupported variant"
                             ),
                             ))
-                        }
+                        },
                     };
 
                     // V4L2 distinguishes DISABLED (permanently unusable) from
@@ -607,7 +607,7 @@ mod internal {
                         v.to_string(),
                         "not supported",
                     ))
-                }
+                },
             };
             let v4l_id = known_camera_control_to_id(id);
             let device = self.lock_device()?;
@@ -665,13 +665,13 @@ mod internal {
                             "Resolution, FrameFormat",
                             why.to_string(),
                         ))
-                    }
+                    },
                 };
                 let prev_fps = match Capture::params(&*device) {
                     Ok(fps) => fps,
                     Err(why) => {
                         return Err(NokhwaError::get_property("Frame rate", why.to_string()))
-                    }
+                    },
                 };
                 (prev_format, prev_fps)
             };
@@ -766,10 +766,10 @@ mod internal {
                             for interval in intervals {
                                 out.extend(expand_frame_interval(interval.interval, res, fourcc));
                             }
-                        }
+                        },
                         Err(why) => {
                             return Err(NokhwaError::get_property("Frame rate", why.to_string()))
-                        }
+                        },
                     }
                 }
             }
@@ -788,7 +788,7 @@ mod internal {
                     frame_format_vec.sort();
                     frame_format_vec.dedup();
                     Ok(frame_format_vec)
-                }
+                },
                 Err(why) => Err(NokhwaError::get_property("FrameFormat", why.to_string())),
             }
         }
@@ -808,7 +808,7 @@ mod internal {
                             message: why.to_string(),
                             backend: Some(ApiBackend::Video4Linux),
                         })
-                    }
+                    },
                 };
 
             // Explicitly start now, or won't work with the RPi. As a consequence, buffers will only be used as required.
@@ -821,7 +821,7 @@ mod internal {
                         message: why.to_string(),
                         backend: Some(ApiBackend::Video4Linux),
                     })
-                }
+                },
             }
 
             // SAFETY: See the `'static` invariant doc on `V4LCaptureDevice`.
@@ -858,7 +858,7 @@ mod internal {
                             cam_fmt.format(),
                             wall_ts.map(|ts| (ts, TimestampKind::WallClock)),
                         ))
-                    }
+                    },
                     Err(why) => Err(NokhwaError::ReadFrameError {
                         message: why.to_string(),
                         format: Some(cam_fmt.format()),
@@ -877,7 +877,7 @@ mod internal {
                         // frames don't carry the mmap buffer's stale padding.
                         let used = (meta.bytesused as usize).min(data.len());
                         Ok(Cow::Borrowed(&data[..used]))
-                    }
+                    },
                     Err(why) => Err(NokhwaError::ReadFrameError {
                         message: why.to_string(),
                         format: Some(cam_fmt_format),

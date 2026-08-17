@@ -75,7 +75,7 @@ pub fn raw_texture_layout(
                 },
                 2 * w,
             ))
-        }
+        },
         // NV12: Y plane (w*h bytes) + interleaved UV plane (w*h/2 bytes).
         // Total = 1.5 * w * h bytes. Store as R8Unorm with height * 3/2.
         FrameFormat::NV12 => {
@@ -95,7 +95,7 @@ pub fn raw_texture_layout(
                 },
                 w,
             ))
-        }
+        },
         // GRAY: 1 byte per pixel. Directly maps to R8Unorm.
         FrameFormat::GRAY => Ok((
             TextureFormat::R8Unorm,
@@ -160,7 +160,7 @@ mod tests {
                 assert_eq!(src, FrameFormat::YUYV);
                 assert_eq!(destination, "RawTextureData");
                 assert_eq!(error, "YUYV requires even width, got 641");
-            }
+            },
             other => panic!("expected ProcessFrameError, got {other:?}"),
         }
     }
@@ -197,7 +197,7 @@ mod tests {
                     assert_eq!(src, FrameFormat::NV12, "{w}x{h}");
                     assert_eq!(destination, "RawTextureData", "{w}x{h}");
                     assert_eq!(error, format!("NV12 requires even dimensions, got {w}x{h}"));
-                }
+                },
                 other => panic!("expected ProcessFrameError for {w}x{h}, got {other:?}"),
             }
         }
@@ -259,7 +259,7 @@ mod tests {
                     backend.is_none(),
                     "expected no backend tag, got {backend:?}"
                 );
-            }
+            },
             other => panic!("expected GeneralError, got {other:?}"),
         }
     }

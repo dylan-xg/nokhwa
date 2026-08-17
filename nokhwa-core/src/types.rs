@@ -185,7 +185,7 @@ impl RequestedFormat<'_> {
                     })
                     .max_by_key(|fmt| fmt.frame_rate())
                     .copied()
-            }
+            },
             RequestedFormatType::AbsoluteHighestFrameRate => {
                 let max_frame_rate = all_formats
                     .iter()
@@ -200,7 +200,7 @@ impl RequestedFormat<'_> {
                     })
                     .max_by_key(|fmt| fmt.resolution())
                     .copied()
-            }
+            },
             RequestedFormatType::HighestResolution(res) => {
                 let highest_fps = all_formats
                     .iter()
@@ -216,7 +216,7 @@ impl RequestedFormat<'_> {
                     })
                     .max_by_key(|x| x.format())
                     .copied()
-            }
+            },
             RequestedFormatType::HighestFrameRate(fps) => {
                 let highest_res = all_formats
                     .iter()
@@ -232,14 +232,14 @@ impl RequestedFormat<'_> {
                     })
                     .max_by_key(|x| x.format())
                     .copied()
-            }
+            },
             RequestedFormatType::Exact(fmt) => {
                 if self.wanted_decoder.contains(&fmt.format()) {
                     Some(fmt)
                 } else {
                     None
                 }
-            }
+            },
             #[allow(clippy::cast_possible_wrap)]
             RequestedFormatType::Closest(c) => {
                 let same_fmt_formats = all_formats
@@ -283,7 +283,7 @@ impl RequestedFormat<'_> {
                 framerate_map.sort_by_key(|a| a.0);
                 let frame_rate = framerate_map.first()?.1;
                 Some(CameraFormat::new(resolution, c.format(), frame_rate))
-            }
+            },
             RequestedFormatType::None => all_formats
                 .iter()
                 .find(|fmt| self.wanted_decoder.contains(&fmt.format()))
@@ -396,22 +396,22 @@ impl Display for FrameFormat {
         match self {
             FrameFormat::MJPEG => {
                 write!(f, "MJPEG")
-            }
+            },
             FrameFormat::YUYV => {
                 write!(f, "YUYV")
-            }
+            },
             FrameFormat::GRAY => {
                 write!(f, "GRAY")
-            }
+            },
             FrameFormat::RAWRGB => {
                 write!(f, "RAWRGB")
-            }
+            },
             FrameFormat::RAWBGR => {
                 write!(f, "RAWBGR")
-            }
+            },
             FrameFormat::NV12 => {
                 write!(f, "NV12")
-            }
+            },
         }
     }
 }
@@ -1044,28 +1044,28 @@ impl ControlValueDescription {
             ControlValueDescription::Integer { value, .. }
             | ControlValueDescription::IntegerRange { value, .. } => {
                 ControlValueSetter::Integer(*value)
-            }
+            },
             ControlValueDescription::Float { value, .. }
             | ControlValueDescription::FloatRange { value, .. } => {
                 ControlValueSetter::Float(*value)
-            }
+            },
             ControlValueDescription::Boolean { value, .. } => ControlValueSetter::Boolean(*value),
             ControlValueDescription::String { value, .. } => {
                 ControlValueSetter::String(value.clone())
-            }
+            },
             ControlValueDescription::Bytes { value, .. } => {
                 ControlValueSetter::Bytes(value.clone())
-            }
+            },
             ControlValueDescription::KeyValuePair { key, value, .. } => {
                 ControlValueSetter::KeyValue(*key, *value)
-            }
+            },
             ControlValueDescription::Point { value, .. } => {
                 ControlValueSetter::Point(value.0, value.1)
-            }
+            },
             ControlValueDescription::Enum { value, .. } => ControlValueSetter::EnumValue(*value),
             ControlValueDescription::RGB { value, .. } => {
                 ControlValueSetter::RGB(value.0, value.1, value.2)
-            }
+            },
         }
     }
 
@@ -1090,7 +1090,7 @@ impl ControlValueDescription {
                     Some(i) => (i - default) % step == 0 || (i - value) % step == 0,
                     None => false,
                 }
-            }
+            },
             ControlValueDescription::IntegerRange {
                 min,
                 max,
@@ -1106,10 +1106,10 @@ impl ControlValueDescription {
                         ((i - default) % step == 0 || (i - value) % step == 0)
                             && i >= min
                             && i <= max
-                    }
+                    },
                     None => false,
                 }
-            }
+            },
             ControlValueDescription::Float {
                 value,
                 default,
@@ -1122,7 +1122,7 @@ impl ControlValueDescription {
                     Some(f) => (f - default).abs() % step == 0_f64 || (f - value) % step == 0_f64,
                     None => false,
                 }
-            }
+            },
             ControlValueDescription::FloatRange {
                 min,
                 max,
@@ -1139,10 +1139,10 @@ impl ControlValueDescription {
                         ((f - default).abs() % step == 0_f64 || (f - value) % step == 0_f64)
                             && f >= min
                             && f <= max
-                    }
+                    },
                     None => false,
                 }
-            }
+            },
             ControlValueDescription::Boolean { .. } => setter.as_boolean().is_some(),
             ControlValueDescription::String { .. } => setter.as_str().is_some(),
             ControlValueDescription::Bytes { .. } => setter.as_bytes().is_some(),
@@ -1150,7 +1150,7 @@ impl ControlValueDescription {
             ControlValueDescription::Point { .. } => match setter.as_point() {
                 Some(pt) => {
                     !pt.0.is_nan() && !pt.1.is_nan() && pt.0.is_finite() && pt.1.is_finite()
-                }
+                },
                 None => false,
             },
             ControlValueDescription::Enum { possible, .. } => match setter.as_enum() {
@@ -1167,7 +1167,7 @@ impl ControlValueDescription {
                 Some(v) => {
                     let in_range = |x: f64, lim: f64| x.is_finite() && x >= 0.0 && x <= lim;
                     in_range(*v.0, max.0) && in_range(*v.1, max.1) && in_range(*v.2, max.2)
-                }
+                },
                 None => false,
             },
         }
@@ -1179,14 +1179,14 @@ impl Display for ControlValueDescription {
         match self {
             ControlValueDescription::None => {
                 write!(f, "(None)")
-            }
+            },
             ControlValueDescription::Integer {
                 value,
                 default,
                 step,
             } => {
                 write!(f, "(Current: {value}, Default: {default}, Step: {step})")
-            }
+            },
             ControlValueDescription::IntegerRange {
                 min,
                 max,
@@ -1198,14 +1198,14 @@ impl Display for ControlValueDescription {
                     f,
                     "(Current: {value}, Default: {default}, Step: {step}, Range: ({min}, {max}))",
                 )
-            }
+            },
             ControlValueDescription::Float {
                 value,
                 default,
                 step,
             } => {
                 write!(f, "(Current: {value}, Default: {default}, Step: {step})")
-            }
+            },
             ControlValueDescription::FloatRange {
                 min,
                 max,
@@ -1217,16 +1217,16 @@ impl Display for ControlValueDescription {
                     f,
                     "(Current: {value}, Default: {default}, Step: {step}, Range: ({min}, {max}))",
                 )
-            }
+            },
             ControlValueDescription::Boolean { value, default } => {
                 write!(f, "(Current: {value}, Default: {default})")
-            }
+            },
             ControlValueDescription::String { value, default } => {
                 write!(f, "(Current: {value}, Default: {default:?})")
-            }
+            },
             ControlValueDescription::Bytes { value, default } => {
                 write!(f, "(Current: {value:x?}, Default: {default:x?})")
-            }
+            },
             ControlValueDescription::KeyValuePair {
                 key,
                 value,
@@ -1237,14 +1237,14 @@ impl Display for ControlValueDescription {
                     "Current: ({key}, {value}), Default: ({}, {})",
                     default.0, default.1
                 )
-            }
+            },
             ControlValueDescription::Point { value, default } => {
                 write!(
                     f,
                     "Current: ({}, {}), Default: ({}, {})",
                     value.0, value.1, default.0, default.1
                 )
-            }
+            },
             ControlValueDescription::Enum {
                 value,
                 possible,
@@ -1254,7 +1254,7 @@ impl Display for ControlValueDescription {
                     f,
                     "Current: {value}, Possible Values: {possible:?}, Default: {default}",
                 )
-            }
+            },
             ControlValueDescription::RGB {
                 value,
                 max,
@@ -1265,7 +1265,7 @@ impl Display for ControlValueDescription {
                     "Current: ({}, {}, {}), Max: ({}, {}, {}), Default: ({}, {}, {})",
                     value.0, value.1, value.2, max.0, max.1, max.2, default.0, default.1, default.2
                 )
-            }
+            },
         }
     }
 }
@@ -1473,34 +1473,34 @@ impl Display for ControlValueSetter {
         match self {
             ControlValueSetter::None => {
                 write!(f, "Value: None")
-            }
+            },
             ControlValueSetter::Integer(i) => {
                 write!(f, "IntegerValue: {i}")
-            }
+            },
             ControlValueSetter::Float(d) => {
                 write!(f, "FloatValue: {d}")
-            }
+            },
             ControlValueSetter::Boolean(b) => {
                 write!(f, "BoolValue: {b}")
-            }
+            },
             ControlValueSetter::String(s) => {
                 write!(f, "StrValue: {s}")
-            }
+            },
             ControlValueSetter::Bytes(b) => {
                 write!(f, "BytesValue: {b:x?}")
-            }
+            },
             ControlValueSetter::KeyValue(k, v) => {
                 write!(f, "KVValue: ({k}, {v})")
-            }
+            },
             ControlValueSetter::Point(x, y) => {
                 write!(f, "PointValue: ({x}, {y})")
-            }
+            },
             ControlValueSetter::EnumValue(v) => {
                 write!(f, "EnumValue: {v}")
-            }
+            },
             ControlValueSetter::RGB(r, g, b) => {
                 write!(f, "RGBValue: ({r}, {g}, {b})")
-            }
+            },
         }
     }
 }
@@ -1558,16 +1558,16 @@ pub fn mjpeg_to_rgb(data: &[u8], rgba: bool) -> Result<Vec<u8>, NokhwaError> {
                         "RGB888",
                         why.to_string(),
                     ))
-                }
+                },
             }
-        }
+        },
         Err(why) => {
             return Err(NokhwaError::process_frame(
                 FrameFormat::MJPEG,
                 "RGB888",
                 why.to_string(),
             ))
-        }
+        },
     };
 
     let scanlines_res = match jpeg_decompress.read_scanlines::<u8>() {
@@ -1578,7 +1578,7 @@ pub fn mjpeg_to_rgb(data: &[u8], rgba: bool) -> Result<Vec<u8>, NokhwaError> {
                 "JPEG",
                 why.to_string(),
             ))
-        }
+        },
     };
     // assert!(jpeg_decompress.finish_decompress());
     jpeg_decompress
@@ -1622,16 +1622,16 @@ pub fn buf_mjpeg_to_rgb(data: &[u8], dest: &mut [u8], rgba: bool) -> Result<(), 
                         "RGB888",
                         why.to_string(),
                     ))
-                }
+                },
             }
-        }
+        },
         Err(why) => {
             return Err(NokhwaError::process_frame(
                 FrameFormat::MJPEG,
                 "RGB888",
                 why.to_string(),
             ))
-        }
+        },
     };
 
     // assert_eq!(dest.len(), jpeg_decompress.min_flat_buffer_size());

@@ -150,7 +150,7 @@ pub fn open(index: CameraIndex, req: OpenRequest) -> Result<OpenedCamera, Nokhwa
     let requested = match req.format {
         Some(fmt) => {
             RequestedFormat::with_formats(RequestedFormatType::Exact(fmt), color_frame_formats())
-        }
+        },
         None => RequestedFormat::with_formats(
             RequestedFormatType::AbsoluteHighestResolution,
             color_frame_formats(),
@@ -451,7 +451,7 @@ impl HybridCamera {
                     #[cfg(not(feature = "logging"))]
                     let _ = e;
                     None
-                }
+                },
                 None => None,
             }
         } else {

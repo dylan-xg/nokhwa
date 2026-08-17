@@ -96,7 +96,7 @@ fn frame_try_new_mismatch_error_carries_src_and_destination() {
             // `expected GRAY, got RAWRGB`, which would mislead
             // anyone reading the error.
             assert_eq!(error, "expected RAWRGB, got GRAY");
-        }
+        },
         other => panic!("expected NokhwaError::ProcessFrameError, got {other:?}"),
     }
 }
@@ -1341,7 +1341,7 @@ fn mjpeg_malformed_returns_error() {
             assert_eq!(src, FrameFormat::MJPEG);
             assert_eq!(destination, "RGB888");
             assert!(!error.is_empty(), "mozjpeg error message must not be empty");
-        }
+        },
         other => panic!("expected ProcessFrameError, got {other:?}"),
     }
 }
@@ -1365,7 +1365,7 @@ fn mjpeg_empty_returns_error() {
             assert_eq!(src, FrameFormat::MJPEG);
             assert_eq!(destination, "RGB888");
             assert!(!error.is_empty(), "mozjpeg error message must not be empty");
-        }
+        },
         other => panic!("expected ProcessFrameError, got {other:?}"),
     }
 }
@@ -1448,7 +1448,7 @@ fn assert_process_frame_err(
             assert_eq!(src, expected_src);
             assert_eq!(destination, expected_dst);
             assert_eq!(error, expected_error);
-        }
+        },
         other => panic!("expected ProcessFrameError, got {other:?}"),
     }
 }
