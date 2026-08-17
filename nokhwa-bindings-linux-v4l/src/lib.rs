@@ -511,13 +511,7 @@ mod internal {
 
                     let ctrl_value_desc = match (desc.typ, ctrl_current) {
                         (
-                            Type::Integer
-                            | Type::Integer64
-                            | Type::Menu
-                            | Type::U8
-                            | Type::U16
-                            | Type::U32
-                            | Type::IntegerMenu,
+                            Type::Integer | Type::Integer64 | Type::U8 | Type::U16 | Type::U32,
                             Value::Integer(current),
                         ) => ControlValueDescription::IntegerRange {
                             min: desc.minimum,
@@ -534,10 +528,18 @@ mod internal {
                                 default: desc.default != 0,
                             }
                         },
-
                         (Type::String, Value::String(current)) => ControlValueDescription::String {
                             value: current,
                             default: None,
+                        },
+                        (Type::Menu | Type::IntegerMenu, Value::Integer(current)) => {
+                            ControlValueDescription::Enum {
+                                value: current,
+                                possible: (desc.minimum..=desc.maximum)
+                                    .step_by(desc.step as usize)
+                                    .collect(),
+                                default: desc.default,
+                            }
                         },
                         (ty, val) => {
                             return Err(io::Error::new(
