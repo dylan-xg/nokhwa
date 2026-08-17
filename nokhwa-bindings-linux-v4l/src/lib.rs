@@ -30,18 +30,23 @@ mod internal {
         types::{
             ApiBackend, CameraControl, CameraFormat, CameraIndex, CameraInfo,
             ControlValueDescription, ControlValueSetter, FrameFormat, KnownCameraControl,
-            KnownCameraControlFlag, RequestedFormat, Resolution,
+            KnownCameraControlFlag, MenuEntry, MenuItem as NokhwaMenuItem, RequestedFormat,
+            Resolution,
         },
     };
     use std::{
         borrow::Cow,
         io::{self, ErrorKind},
     };
-    use v4l::v4l_sys::{
-        V4L2_CID_BACKLIGHT_COMPENSATION, V4L2_CID_BRIGHTNESS, V4L2_CID_CONTRAST, V4L2_CID_EXPOSURE,
-        V4L2_CID_FOCUS_RELATIVE, V4L2_CID_GAIN, V4L2_CID_GAMMA, V4L2_CID_HUE,
-        V4L2_CID_IRIS_RELATIVE, V4L2_CID_PAN_RELATIVE, V4L2_CID_SATURATION, V4L2_CID_SHARPNESS,
-        V4L2_CID_TILT_RELATIVE, V4L2_CID_WHITE_BALANCE_TEMPERATURE, V4L2_CID_ZOOM_RELATIVE,
+    use v4l::{
+        control::MenuItem,
+        v4l_sys::{
+            V4L2_CID_BACKLIGHT_COMPENSATION, V4L2_CID_BRIGHTNESS, V4L2_CID_CONTRAST,
+            V4L2_CID_EXPOSURE, V4L2_CID_FOCUS_RELATIVE, V4L2_CID_GAIN, V4L2_CID_GAMMA,
+            V4L2_CID_HUE, V4L2_CID_IRIS_RELATIVE, V4L2_CID_PAN_RELATIVE, V4L2_CID_SATURATION,
+            V4L2_CID_SHARPNESS, V4L2_CID_TILT_RELATIVE, V4L2_CID_WHITE_BALANCE_TEMPERATURE,
+            V4L2_CID_ZOOM_RELATIVE,
+        },
     };
     use v4l::{
         control::{Control, Flags, Type, Value},
@@ -244,6 +249,24 @@ mod internal {
                 ))
             },
             Err(why) => Err(NokhwaError::get_property("parameters", why.to_string())),
+        }
+    }
+
+    pub struct V4lMenuEntry(MenuEntry);
+
+    impl From<&(u32, MenuItem)> for V4lMenuEntry {
+        fn from(value: &(u32, MenuItem)) -> Self {
+            let item = match &value.1 {
+                MenuItem::Name(s) => NokhwaMenuItem::Name(s.to_owned()),
+                MenuItem::Value(v) => NokhwaMenuItem::Value(*v),
+            };
+            Self(MenuEntry::new(value.0, item))
+        }
+    }
+
+    impl From<V4lMenuEntry> for MenuEntry {
+        fn from(value: V4lMenuEntry) -> Self {
+            value.0
         }
     }
 
@@ -533,12 +556,16 @@ mod internal {
                             default: None,
                         },
                         (Type::Menu | Type::IntegerMenu, Value::Integer(current)) => {
-                            ControlValueDescription::Enum {
-                                value: current,
-                                possible: (desc.minimum..=desc.maximum)
-                                    .step_by(desc.step as usize)
+                            ControlValueDescription::Menu {
+                                // I assume a menu cannot have negative values.
+                                value: current as u32,
+                                items: desc
+                                    .items
+                                    .expect("the menu types should be without the items vector")
+                                    .iter()
+                                    .map(|i| V4lMenuEntry::from(i).into())
                                     .collect(),
-                                default: desc.default,
+                                default: desc.default as u32,
                             }
                         },
                         (ty, val) => {
@@ -603,6 +630,7 @@ mod internal {
                 ControlValueSetter::Boolean(b) => Value::Boolean(b),
                 ControlValueSetter::String(s) => Value::String(s),
                 ControlValueSetter::Bytes(b) => Value::CompoundU8(b),
+                ControlValueSetter::Menu(u) => Value::Integer(u as i64),
                 v => {
                     return Err(NokhwaError::set_property(
                         id.to_string(),
