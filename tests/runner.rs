@@ -328,9 +328,10 @@ fn runner_shutter_timeout_is_forwarded() {
     let observed = Arc::new(AtomicU64::new(0));
     let probe = TimeoutProbe {
         info: CameraInfo::new(
-            "probe",
-            "probe",
-            "probe",
+            "probe".to_string(),
+            "probe".to_string(),
+            "probe".to_string(),
+            false,
             nokhwa_core::types::CameraIndex::Index(0),
         ),
         observed_ms: Arc::clone(&observed),
@@ -755,9 +756,10 @@ fn runner_stream_worker_survives_transient_frame_errors() {
 
     let src = SharedQueueFrameSource {
         info: CameraInfo::new(
-            "shared",
-            "shared",
-            "shared",
+            "shared".to_string(),
+            "shared".to_string(),
+            "shared".to_string(),
+            false,
             nokhwa_core::types::CameraIndex::Index(0),
         ),
         format: CameraFormat::new(
@@ -1014,9 +1016,10 @@ nokhwa_backend!(ControlProbeHybrid: FrameSource, ShutterCapture);
 
 fn make_probe_info() -> CameraInfo {
     CameraInfo::new(
-        "probe",
-        "probe",
-        "probe",
+        "probe".to_string(),
+        "probe".to_string(),
+        "probe".to_string(),
+        false,
         nokhwa_core::types::CameraIndex::Index(0),
     )
 }
@@ -1520,9 +1523,10 @@ nokhwa_backend!(FailingOpenFrame: FrameSource);
 fn runner_spawn_stream_propagates_open_error() {
     let dev = FailingOpenFrame {
         info: CameraInfo::new(
-            "FailingOpenFrame",
-            "test",
-            "test",
+            "FailingOpenFrame".to_string(),
+            "test".to_string(),
+            "test".to_string(),
+            false,
             nokhwa_core::types::CameraIndex::Index(0),
         ),
     };
@@ -1733,7 +1737,13 @@ fn runner_spawn_stream_worker_exits_on_dropped_frames_receiver() {
     use std::time::Instant;
 
     let src = EndlessFrameSource {
-        info: CameraInfo::new("endless", "endless", "endless", CameraIndex::Index(0)),
+        info: CameraInfo::new(
+            "endless".to_string(),
+            "endless".to_string(),
+            "endless".to_string(),
+            false,
+            CameraIndex::Index(0),
+        ),
         format: CameraFormat::new(
             nokhwa_core::types::Resolution::new(4, 4),
             FrameFormat::YUYV,
@@ -1909,9 +1919,10 @@ fn runner_spawn_hybrid_worker_exits_on_dropped_frames_receiver() {
 
     let dev = EndlessHybrid {
         info: CameraInfo::new(
-            "endless-hybrid",
-            "endless-hybrid",
-            "endless-hybrid",
+            "endless-hybrid".to_string(),
+            "endless-hybrid".to_string(),
+            "endless-hybrid".to_string(),
+            false,
             CameraIndex::Index(0),
         ),
         format: CameraFormat::new(
@@ -2038,9 +2049,10 @@ fn runner_spawn_shutter_worker_exits_on_dropped_pictures_receiver() {
 
     let dev = EndlessShutter {
         info: CameraInfo::new(
-            "endless-shutter",
-            "endless-shutter",
-            "endless-shutter",
+            "endless-shutter".to_string(),
+            "endless-shutter".to_string(),
+            "endless-shutter".to_string(),
+            false,
             CameraIndex::Index(0),
         ),
     };
@@ -2139,9 +2151,10 @@ fn runner_shutdown_drops_receivers_before_joining_drop_oldest_relay() {
 
     let src = EndlessFrameSource {
         info: CameraInfo::new(
-            "endless-relay",
-            "endless-relay",
-            "endless-relay",
+            "endless-relay".to_string(),
+            "endless-relay".to_string(),
+            "endless-relay".to_string(),
+            false,
             CameraIndex::Index(0),
         ),
         format: CameraFormat::new(
@@ -2236,9 +2249,10 @@ fn runner_shutdown_drops_receivers_before_joining_block_overflow_worker() {
 
     let src = EndlessFrameSource {
         info: CameraInfo::new(
-            "endless-block",
-            "endless-block",
-            "endless-block",
+            "endless-block".to_string(),
+            "endless-block".to_string(),
+            "endless-block".to_string(),
+            false,
             CameraIndex::Index(0),
         ),
         format: CameraFormat::new(

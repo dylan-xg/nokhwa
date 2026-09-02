@@ -404,9 +404,10 @@ mod real {
 
         fn info(idx: u32) -> CameraInfo {
             CameraInfo::new(
-                &format!("cam{idx}"),
-                "test",
-                &format!("\\\\?\\usb#vid_dead&pid_beef&mi_00#{idx}"),
+                format!("cam{idx}"),
+                "test".to_string(),
+                format!("\\\\?\\usb#vid_dead&pid_beef&mi_00#{idx}"),
+                false,
                 CameraIndex::Index(idx),
             )
         }

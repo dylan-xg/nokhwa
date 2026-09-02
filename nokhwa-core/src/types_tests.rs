@@ -270,9 +270,10 @@ fn camera_format_display_renders_resolution_at_fps_then_format() {
 #[test]
 fn camera_info_display_renders_name_description_extra_index() {
     let info = CameraInfo::new(
-        "Logitech BRIO",
-        "USB Video Class Device",
-        "/dev/video0",
+        "Logitech BRIO".to_string(),
+        "USB Video Class Device".to_string(),
+        "/dev/video0".to_string(),
+        false,
         CameraIndex::Index(2),
     );
     assert_eq!(
@@ -280,9 +281,10 @@ fn camera_info_display_renders_name_description_extra_index() {
         "Name: Logitech BRIO, Description: USB Video Class Device, Extra: /dev/video0, Index: 2"
     );
     let url_info = CameraInfo::new(
-        "RTSP Stream",
-        "GStreamer URL Source",
-        "",
+        "RTSP Stream".to_string(),
+        "GStreamer URL Source".to_string(),
+        "".to_string(),
+        false,
         CameraIndex::String("rtsp://example.com/cam".to_string()),
     );
     assert_eq!(
@@ -368,9 +370,10 @@ fn camera_index_partial_eq_is_structural_not_numeric() {
 #[test]
 fn camera_info_getters_setters() {
     let mut info = CameraInfo::new(
-        "Test Camera",
-        "A test camera",
-        "misc info",
+        "Test Camera".to_string(),
+        "A test camera".to_string(),
+        "misc info".to_string(),
+        false,
         CameraIndex::Index(0),
     );
     assert_eq!(info.human_name(), "Test Camera");

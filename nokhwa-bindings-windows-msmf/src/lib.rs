@@ -500,6 +500,7 @@ pub mod wmf {
             &name,
             "MediaFoundation Camera",
             &symlink,
+            false,
             index,
         ))
     }

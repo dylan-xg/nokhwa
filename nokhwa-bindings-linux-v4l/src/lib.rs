@@ -39,7 +39,13 @@ mod internal {
         io::{self, ErrorKind},
     };
     use v4l::{
+        capability,
         control::MenuItem,
+        control::{Control, Flags, Type, Value},
+        frameinterval::FrameIntervalEnum,
+        framesize::FrameSizeEnum,
+        io::traits::CaptureStream,
+        prelude::MmapStream,
         v4l_sys::{
             V4L2_CID_AUTO_WHITE_BALANCE, V4L2_CID_BACKLIGHT_COMPENSATION, V4L2_CID_BRIGHTNESS,
             V4L2_CID_CONTRAST, V4L2_CID_EXPOSURE, V4L2_CID_EXPOSURE_ABSOLUTE,
@@ -49,13 +55,6 @@ mod internal {
             V4L2_CID_SHARPNESS, V4L2_CID_TILT_RELATIVE, V4L2_CID_WHITE_BALANCE_TEMPERATURE,
             V4L2_CID_ZOOM_RELATIVE,
         },
-    };
-    use v4l::{
-        control::{Control, Flags, Type, Value},
-        frameinterval::FrameIntervalEnum,
-        framesize::FrameSizeEnum,
-        io::traits::CaptureStream,
-        prelude::MmapStream,
         video::{capture::Parameters, Capture},
         Device, Format, FourCC,
     };
@@ -100,19 +99,42 @@ mod internal {
     /// query v4l2 cameras
     #[allow(clippy::unnecessary_wraps)]
     pub fn query() -> Result<Vec<CameraInfo>, NokhwaError> {
-        Ok(v4l::context::enum_devices()
+        v4l::context::enum_devices()
             .iter()
             .map(|node| {
-                CameraInfo::new(
-                    &node
-                        .name()
-                        .unwrap_or(node.path().to_string_lossy().into_owned()),
-                    &format!("Video4Linux Device @ {}", node.path().to_string_lossy()),
-                    "",
-                    CameraIndex::Index(node.index() as u32),
-                )
+                let index = CameraIndex::Index(node.index() as u32);
+
+                let shared_device = new_shared_device(index.as_index().unwrap() as usize).unwrap();
+                let device = shared_device
+                    .lock()
+                    .map_err(|e| NokhwaError::InitializeError {
+                        backend: ApiBackend::Video4Linux,
+                        error: format!("Fail to lock device mutex: {e}"),
+                    })
+                    .unwrap();
+
+                let device_caps = device.query_caps().map_err(|why| {
+                    NokhwaError::get_property("Device Capabilities", why.to_string())
+                })?;
+
+                drop(device);
+
+                let info = CameraInfo::new(
+                    format!("{} ({})", device_caps.card, device_caps.driver),
+                    device_caps.bus,
+                    format!(
+                        "{}.{}.{}",
+                        device_caps.version.0, device_caps.version.1, device_caps.version.2
+                    ),
+                    device_caps
+                        .capabilities
+                        .intersects(capability::Flags::META_CAPTURE),
+                    index,
+                );
+
+                Ok(info)
             })
-            .collect())
+            .collect()
     }
 
     type SharedDevice = std::sync::Arc<std::sync::Mutex<Device>>;
@@ -429,14 +451,22 @@ mod internal {
 
             drop(device);
 
+            let camera_info = CameraInfo::new(
+                format!("{} ({})", device_caps.card, device_caps.driver),
+                device_caps.bus,
+                format!(
+                    "{}.{}.{}",
+                    device_caps.version.0, device_caps.version.1, device_caps.version.2
+                ),
+                device_caps
+                    .capabilities
+                    .intersects(capability::Flags::META_CAPTURE),
+                index,
+            );
+
             let mut v4l2 = V4LCaptureDevice {
                 camera_format: format,
-                camera_info: CameraInfo::new(
-                    &device_caps.card,
-                    &device_caps.driver,
-                    &format!("{} {:?}", device_caps.bus, device_caps.version),
-                    index,
-                ),
+                camera_info,
                 device: shared_device,
                 stream_handle: None,
             };

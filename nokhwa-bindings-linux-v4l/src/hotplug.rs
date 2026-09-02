@@ -363,9 +363,10 @@ mod real {
 
         fn info(idx: u32) -> CameraInfo {
             CameraInfo::new(
-                &format!("cam{idx}"),
-                "test",
-                "test",
+                format!("cam{idx}"),
+                "test".to_string(),
+                "test".to_string(),
+                false,
                 CameraIndex::Index(idx),
             )
         }

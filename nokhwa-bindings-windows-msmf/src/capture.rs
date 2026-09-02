@@ -67,9 +67,10 @@ impl MediaFoundationCaptureDevice {
         let mut mf_device = MediaFoundationDevice::new(index.clone())?;
 
         let info = CameraInfo::new(
-            &mf_device.name(),
-            "MediaFoundation Camera Device",
-            &mf_device.symlink(),
+            mf_device.name().to_string(),
+            "MediaFoundation Camera Device".to_string(),
+            mf_device.symlink().to_string(),
+            false,
             index.clone(),
         );
 

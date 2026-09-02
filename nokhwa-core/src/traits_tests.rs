@@ -109,7 +109,13 @@ impl EventSource for Dummy {
 
 fn sample_info() -> CameraInfo {
     use crate::types::CameraIndex;
-    CameraInfo::new("dummy", "dummy", "", CameraIndex::Index(0))
+    CameraInfo::new(
+        "dummy".to_string(),
+        "dummy".to_string(),
+        "".to_string(),
+        false,
+        CameraIndex::Index(0),
+    )
 }
 
 #[test]
@@ -567,7 +573,13 @@ fn frame_timeout_default_forwards_to_frame() {
 // `CaptureError { code, message }` carries a `String`); pin those.
 
 fn make_info(idx: u32, name: &str) -> CameraInfo {
-    CameraInfo::new(name, "desc", "misc", CameraIndex::Index(idx))
+    CameraInfo::new(
+        name.to_string(),
+        "desc".to_string(),
+        "misc".to_string(),
+        false,
+        CameraIndex::Index(idx),
+    )
 }
 
 #[test]
@@ -636,7 +648,13 @@ fn hotplug_event_index_matches_across_connect_disconnect_with_drift() {
 // log output and silently broke any tooling grep-ing those fields.
 #[test]
 fn hotplug_event_debug_exact_format() {
-    let info = CameraInfo::new("Cam", "desc", "misc", CameraIndex::Index(0));
+    let info = CameraInfo::new(
+        "Cam".to_string(),
+        "desc".to_string(),
+        "misc".to_string(),
+        false,
+        CameraIndex::Index(0),
+    );
     assert_eq!(
         format!("{:?}", HotplugEvent::Connected(info.clone())),
         "Connected(CameraInfo { human_name: \"Cam\", description: \"desc\", \

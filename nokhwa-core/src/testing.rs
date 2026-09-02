@@ -38,9 +38,10 @@ use crate::types::{
 #[must_use]
 pub fn mock_info(index: u32) -> CameraInfo {
     CameraInfo::new(
-        "Mock Camera",
-        "mock camera for tests",
-        "mock",
+        "Mock Camera".to_string(),
+        "mock camera for tests".to_string(),
+        "mock".to_string(),
+        false,
         CameraIndex::Index(index),
     )
 }

@@ -105,9 +105,10 @@ mod internal {
             let name = dev.display_name().to_string();
             let class = dev.device_class().to_string();
             cameras.push(CameraInfo::new(
-                &name,
-                &class,
-                &name,
+                name,
+                class,
+                name,
+                false,
                 CameraIndex::Index(u32::try_from(idx).unwrap_or(u32::MAX)),
             ));
         }
@@ -209,11 +210,17 @@ mod internal {
             // Branch 1: URL-like string → uridecodebin pipeline.
             if let CameraIndex::String(s) = index {
                 if looks_like_url_scheme(s) {
-                    let info = CameraInfo::new(s, "URL", s, index.clone());
+                    let info = CameraInfo::new(
+                        s.clone(),
+                        "URL".to_string(),
+                        s.clone(),
+                        false,
+                        index.clone(),
+                    );
                     return Ok(Self {
                         info,
                         source: BackendSource::Uri(UriSource {
-                            uri: s.clone(),
+                            uri: s,
                             negotiated: None,
                         }),
                         pipeline: None,
@@ -233,7 +240,7 @@ mod internal {
 
             let name = device.display_name().to_string();
             let class = device.device_class().to_string();
-            let info = CameraInfo::new(&name, &class, &name, index.clone());
+            let info = CameraInfo::new(name.clone(), class, name, false, index.clone());
 
             Ok(Self {
                 info,

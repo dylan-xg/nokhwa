@@ -504,6 +504,7 @@ pub(crate) fn get_raw_device_info(index: CameraIndex, device: &AVCaptureDevice) 
         name.to_string().as_ref(),
         &description,
         misc.to_string().as_ref(),
+        false,
         index,
     )
 }

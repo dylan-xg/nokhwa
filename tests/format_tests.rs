@@ -79,9 +79,10 @@ fn resolution_display_exact_format() {
 #[test]
 fn camera_info_construction() {
     let info = CameraInfo::new(
-        "Test Camera",
-        "A test camera",
-        "misc",
+        "Test Camera".to_string(),
+        "A test camera".to_string(),
+        "misc".to_string(),
+        false,
         CameraIndex::Index(0),
     );
     assert_eq!(info.human_name(), "Test Camera");

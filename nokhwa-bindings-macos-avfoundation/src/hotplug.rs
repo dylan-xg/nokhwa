@@ -382,9 +382,10 @@ mod real {
 
         fn info(idx: u32) -> CameraInfo {
             CameraInfo::new(
-                &format!("cam{idx}"),
-                "test",
-                &format!("0x{idx:016x}-AVCaptureDevice-uniqueID"),
+                format!("cam{idx}"),
+                "test".to_string(),
+                format!("0x{idx:016x}-AVCaptureDevice-uniqueID"),
+                false,
                 CameraIndex::Index(idx),
             )
         }

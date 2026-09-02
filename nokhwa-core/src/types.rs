@@ -3,7 +3,6 @@ use crate::format_types::CaptureFormat;
 #[cfg(feature = "serialize")]
 use serde::{Deserialize, Serialize};
 use std::{
-    borrow::Borrow,
     cmp::Ordering,
     fmt::{Display, Formatter},
     str::FromStr,
@@ -699,6 +698,7 @@ pub struct CameraInfo {
     human_name: String,
     description: String,
     misc: String,
+    is_metadata: bool,
     index: CameraIndex,
 }
 
@@ -707,14 +707,18 @@ impl CameraInfo {
     /// # JS-WASM
     /// This is exported as a constructor for [`CameraInfo`].
     #[must_use]
-    // OK, i just checkeed back on this code. WTF was I on when I wrote `&(impl AsRef<str> + ?Sized)` ????
-    // I need to get on the same shit that my previous self was on, because holy shit that stuff is strong as FUCK!
-    // Finally fixed this insanity. Hopefully I didn't torment anyone by actually putting this in a stable release.
-    pub fn new(human_name: &str, description: &str, misc: &str, index: CameraIndex) -> Self {
+    pub fn new(
+        human_name: String,
+        description: String,
+        misc: String,
+        is_metadata: bool,
+        index: CameraIndex,
+    ) -> Self {
         CameraInfo {
-            human_name: human_name.to_string(),
-            description: description.to_string(),
-            misc: misc.to_string(),
+            human_name,
+            description,
+            misc,
+            is_metadata,
             index,
         }
     }
@@ -722,63 +726,34 @@ impl CameraInfo {
     /// Get a reference to the device info's human readable name.
     /// # JS-WASM
     /// This is exported as a `get_HumanReadableName`.
-    #[must_use]
-    // yes, i know, unnecessary alloc this, unnecessary alloc that
-    // but wasm bindgen
-    pub fn human_name(&self) -> String {
-        self.human_name.clone()
-    }
-
-    /// Set the device info's human name.
-    /// # JS-WASM
-    /// This is exported as a `set_HumanReadableName`.
-    pub fn set_human_name(&mut self, human_name: &str) {
-        self.human_name = human_name.to_string();
+    pub fn human_name(&self) -> &str {
+        &self.human_name
     }
 
     /// Get a reference to the device info's description.
     /// # JS-WASM
     /// This is exported as a `get_Description`.
-    #[must_use]
     pub fn description(&self) -> &str {
-        self.description.borrow()
-    }
-
-    /// Set the device info's description.
-    /// # JS-WASM
-    /// This is exported as a `set_Description`.
-    pub fn set_description(&mut self, description: &str) {
-        self.description = description.to_string();
+        &self.description
     }
 
     /// Get a reference to the device info's misc.
     /// # JS-WASM
     /// This is exported as a `get_MiscString`.
-    #[must_use]
-    pub fn misc(&self) -> String {
-        self.misc.clone()
+    pub fn misc(&self) -> &str {
+        &self.misc
     }
 
-    /// Set the device info's misc.
-    /// # JS-WASM
-    /// This is exported as a `set_MiscString`.
-    pub fn set_misc(&mut self, misc: &str) {
-        self.misc = misc.to_string();
+    /// Get information about whether or not this is a metadata device.
+    pub fn is_metadata(&self) -> bool {
+        self.is_metadata
     }
 
     /// Get a reference to the device info's index.
     /// # JS-WASM
     /// This is exported as a `get_Index`.
-    #[must_use]
     pub fn index(&self) -> &CameraIndex {
         &self.index
-    }
-
-    /// Set the device info's index.
-    /// # JS-WASM
-    /// This is exported as a `set_Index`.
-    pub fn set_index(&mut self, index: CameraIndex) {
-        self.index = index;
     }
 }
 
